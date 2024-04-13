@@ -262,6 +262,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_carousel_widget:
+    dependency: "direct main"
+    description:
+      name: flutter_carousel_widget
+      sha256: "37b9e55e4cafffe358152b016db24153e756152aa07c4214cfe6ee902cd69a01"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   flutter_emoji_feedback:
     dependency: "direct main"
     description:
@@ -448,6 +456,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1+1"
+  insta_image_viewer:
+    dependency: "direct main"
+    description:
+      name: insta_image_viewer
+      sha256: "9a81432b1ab907ea91c255ec079440afe43f999533422badffaa482dfb7fdfbb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   intl:
     dependency: "direct main"
     description:

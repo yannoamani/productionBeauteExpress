@@ -63,6 +63,8 @@ dependencies:
   circular_badge_avatar: ^0.1.2
   shimmer: ^3.0.0
   modal_bottom_sheet: ^3.0.0
+  flutter_carousel_widget: ^2.2.0
+  insta_image_viewer: ^1.0.2
   
 flutter_icons:
   android: true

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gestion_salon_coiffure/Utilisateur/splahScreen/splash_screen.dart';
+import 'package:gestion_salon_coiffure/Page/Utilisateur/splahScreen/splash_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 

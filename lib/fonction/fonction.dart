@@ -179,7 +179,7 @@ Widget boutton(BuildContext context, bool charg, Color mycolor, String montexte,
               ? SpinKitCircle(
                   color: Colors.white,
                 )
-              : Mytext(montexte, 15, Colors.white)));
+              : Mytext(montexte, 17, Colors.white)));
 }
 
 Widget texte(String texte) {
@@ -191,11 +191,11 @@ Widget texte(String texte) {
 
 // Cette fonction concerne mon Url
 String monurl(String endpoint) {
-  return 'http://192.168.1.2:6060/api/$endpoint';
+  return 'https://backend-spa.lce-ci.com/api/$endpoint';
 }
 
 String ImgDB(String endpoint) {
-  return 'http://192.168.1.2:6060/$endpoint';
+  return 'https://backend-spa.lce-ci.com/public/public/image/$endpoint';
 }
 
 // Cette fonction represente My header
@@ -844,9 +844,9 @@ TextSpan MySpan(String libelle, double taille, Color Color) {
 
 // Mes inputs pour la page login
 Widget VraiInput(
-    TextEditingController _controll, String Libelle, IconData Icon) {
+    TextEditingController _controll, String Libelle, IconData moniocn) {
   return TextFormField(
-    style: GoogleFonts.openSans(
+    style: GoogleFonts.andadaPro(
       color: Color.fromARGB(255, 86, 86, 86),
       fontSize: 20,
     ),
@@ -855,20 +855,22 @@ Widget VraiInput(
     decoration: InputDecoration(
       alignLabelWithHint: true,
       hintText: '$Libelle',
-      hintStyle: TextStyle(
+      hintStyle: GoogleFonts.andadaPro(
         fontSize: 20,
         color: Color.fromARGB(255, 86, 86, 86),
       ),
-      border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-      focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue, width: 1)),
-      prefixIcon: Padding(
-        padding: EdgeInsets.only(top: 10),
-        child: FaIcon(
-          Icon,
-          color: Color.fromARGB(255, 86, 86, 86),
-        ),
-      ),
+       border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                     borderRadius: BorderRadius.circular(10),
+                                    ),
+                                focusedBorder: OutlineInputBorder(
+                                   
+                                    borderSide:
+                                        BorderSide(color: const Color.fromARGB(255, 234, 210, 2), width: 2),
+                                        borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        prefixIcon: Icon(moniocn)
+                                // prefixIcon: FaIcon(
     ),
   );
 }
@@ -897,7 +899,7 @@ Card cardselection(double large, IconData icon, String texte, String indice,
             Text(
               texte,
               textAlign: TextAlign.center,
-              style: GoogleFonts.openSans(
+              style: GoogleFonts.andadaPro(
                 color: Colors.black,
                 fontSize: 15,
               ),
@@ -1049,6 +1051,31 @@ Widget aucunRdv() {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Mytext("Aucune réservation", 20, Colors.white),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget mesreservations(String texte) {
+  return SliverToBoxAdapter(
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset("assets/9318694.jpg"),
+          SizedBox(height: 5),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Mytext("$texte", 20, Colors.white),
             ),
           ),
         ],
