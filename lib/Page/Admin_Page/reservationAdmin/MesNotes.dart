@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:gestion_salon_coiffure/Widget/chargementPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -31,23 +32,28 @@ class _MesNotesState extends State<MesNotes> {
     final response =
         await http.get(uri, headers: header('${prefs.getString('token')}'));
     // print(response.body);
-    final resultat = jsonDecode(response.body);
-    if (resultat['status']) {
-      setState(() {
-        mesVotes = resultat['data'];
-        maMoyenne = resultat['moyenne_operateur'];
-        isLoading = resultat['status'];
-      });
-      // for (var element in mesVotes) {
-      //   var note = 0;
 
-      //   note = element['rate'];
-      //   maMoyenne += note;
-      // }
-    } else {
-      message(context, "${resultat['message']}", Colors.red);
-    }
     print(response.body);
+    if (response.statusCode == 200) {
+      final resultat = jsonDecode(response.body);
+      if (resultat['status']) {
+        setState(() {
+          mesVotes = resultat['data'];
+          maMoyenne = resultat['moyenne_operateur'];
+          isLoading = resultat['status'];
+        });
+        // for (var element in mesVotes) {
+        //   var note = 0;
+
+        //   note = element['rate'];
+        //   maMoyenne += note;
+        // }
+      } else {
+        message(context, "${resultat['message']}", Colors.red);
+      }
+    } else {
+      message(context, "Erreur ${response.statusCode}", Colors.red);
+    }
   }
 
   @override
@@ -63,28 +69,11 @@ class _MesNotesState extends State<MesNotes> {
         future: Future.delayed(Duration(seconds: 1)),
         builder: (context, snapshot) {
           if (isLoading == false) {
-            return Scaffold(
-              appBar: AppBar(),
-              body: const Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Chargement en cours...",
-                    ),
-                    CupertinoActivityIndicator(
-                      radius: 25,
-                      color: Colors.black,
-                    )
-                  ],
-                ),
-              ),
-            );
+            return chargementPage(titre: "Mes notes", arrowback: true);
           } else {
             return Scaffold(
               appBar: AppBar(
-                title: Text('Mes notes'),
+                title: Mytext("Mes notes", 25, Colors.black),
                 actions: [Image.asset('assets/massage.png')],
               ),
               backgroundColor: Colors.grey[100],
@@ -137,7 +126,7 @@ class _MesNotesState extends State<MesNotes> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(11.0),
                                       child: Titre(
-                                          'Une moyenne de ${maMoyenne } /5',
+                                          'Une moyenne de ${maMoyenne} /5',
                                           20,
                                           Colors.black),
                                     ),

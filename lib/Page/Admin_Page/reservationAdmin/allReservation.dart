@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestion_salon_coiffure/Page/Admin_Page/reservationAdmin/retour.dart';
+import 'package:gestion_salon_coiffure/Widget/chargementPage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
         });
         print(response.body);
       } else {
-        print(response.statusCode);
+        print(response.body);
       }
     } catch (e) {
       print(e);
@@ -58,36 +59,16 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
         future: Future.delayed(const Duration(seconds: 2)),
         builder: (context, snapshot) {
           if (isLoading == false) {
-            return  const Scaffold(
-              // appBar: AppBar(),
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "En cours de chargement ...",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    CupertinoActivityIndicator(radius: 20),
-                  ],
-                ),
-              ),
-            );
+            return chargementPage(titre: "Historiques", arrowback: false);
           } else {
             return Scaffold(
               appBar: AppBar(
-                title: Text("Historiques"),
+                title: Mytext("Historiques", 20, Colors.black),
               ),
               body: Scrollbar(
-                
                 interactive: true,
                 child: CustomScrollView(
                   slivers: [
-                  
                     SliverList.separated(
                         separatorBuilder: (context, index) => Divider(
                               color: Colors.grey,
@@ -102,10 +83,10 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
                           String date = resultats['date'];
                           String heure = resultats['heure'];
                           final montant = resultats['montant'];
-                
+
                           final status = resultats['status'];
                           DateTime Convert = DateTime.parse(date);
-                
+
                           String NewDate =
                               DateFormat.yMMMEd('fr_FR').format(Convert);
                           return ListTile(
@@ -114,35 +95,40 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
                             trailing: Column(
                               children: [
                                 FaIcon(
-                                  status == "Expirer"
-                                      ? FontAwesomeIcons.xmark
-                                      : status == "Annuler"?FontAwesomeIcons.xmark
-                                      : 
-                                           FontAwesomeIcons.circleCheck,
-                                         
-                                  size: 30,
-                                  color: status == "Expirer"
-                                      ? Colors.red
-                                      :status=="Annuler"?Colors.red: Colors.green
-                                         
-                                          // Couleur par défaut pour le cas "spinner"
-                                ),
+                                    status == "Expirer"
+                                        ? FontAwesomeIcons.xmark
+                                        : status == "Annuler"
+                                            ? FontAwesomeIcons.xmark
+                                            : FontAwesomeIcons.circleCheck,
+                                    size: 30,
+                                    color: status == "Expirer"
+                                        ? Colors.red
+                                        : status == "Annuler"
+                                            ? Colors.red
+                                            : Colors.green
+
+                                    // Couleur par défaut pour le cas "spinner"
+                                    ),
                                 SizedBox(
                                   height: 5,
                                 ),
-                                Text("${status=="Annuler"?"Annulée" :status=="Expirer"?"Expiree":"Traitée"}"),
+                                Text(
+                                    "${status == "Annuler" ? "Annulée" : status == "Expirer" ? "Expiree" : "Traitée"}"),
                               ],
                             ),
-                              leading: CircularBadgeAvatar(
+                            leading: CircularBadgeAvatar(
                               iconPosition: 32,
-                              iconColor: status  == "Expirer"
-                                    ?Colors.red: status=="Annuler"?Colors.red: Colors.green,
+                              iconColor: status == "Expirer"
+                                  ? Colors.red
+                                  : status == "Annuler"
+                                      ? Colors.red
+                                      : Colors.green,
 
-                              icon:  status == "Expirer"
+                              icon: status == "Expirer"
+                                  ? FontAwesomeIcons.xmark
+                                  : status == "Annuler"
                                       ? FontAwesomeIcons.xmark
-                                      : status == "Annuler"?FontAwesomeIcons.xmark
-                                      : 
-                                           FontAwesomeIcons.circleCheck,
+                                      : FontAwesomeIcons.circleCheck,
 
                               /// [if you want to use asset image]
                               // assetImage: "assets/images/asset_image.png",
@@ -156,7 +142,9 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return Scaffold(
-                                      appBar: AppBar(automaticallyImplyLeading: false,),
+                                      appBar: AppBar(
+                                        automaticallyImplyLeading: false,
+                                      ),
                                       body: Padding(
                                         padding: const EdgeInsets.only(
                                             top: 0, left: 0),
@@ -169,8 +157,8 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                 retour(),
-                                               Container(
+                                                retour(),
+                                                Container(
                                                     height: 100,
                                                     // width: dou,
                                                     child: Center(
@@ -178,26 +166,29 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
                                                             CircularBadgeAvatar(
                                                       circleBgColor:
                                                           Colors.orangeAccent,
-                                                      icon:  status == "Expirer"
-                                      ? FontAwesomeIcons.xmark
-                                      : status == "Annuler"?FontAwesomeIcons.xmark
-                                      : 
-                                           FontAwesomeIcons.circleCheck,
+                                                      icon: status == "Expirer"
+                                                          ? FontAwesomeIcons
+                                                              .xmark
+                                                          : status == "Annuler"
+                                                              ? FontAwesomeIcons
+                                                                  .xmark
+                                                              : FontAwesomeIcons
+                                                                  .circleCheck,
                                                     ))),
                                                 SizedBox(
                                                   height: 15,
                                                 ),
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 10),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 10),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                     
                                                       SizedBox(
                                                         height: 15,
                                                       ),
@@ -262,8 +253,10 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
                                                         leading: circlecard(
                                                             FontAwesomeIcons
                                                                 .calendarDay),
-                                                        title: NewText('$NewDate',
-                                                            15, Colors.black),
+                                                        title: NewText(
+                                                            '$NewDate',
+                                                            15,
+                                                            Colors.black),
                                                       ),
                                                       Divider(),
                                                       ListTile(
@@ -275,34 +268,29 @@ class _HistoriqueAdminState extends State<HistoriqueAdmin> {
                                                       ),
                                                       Divider(),
                                                       ListTile(
-                                                        leading: circlecard(
-                                                            FontAwesomeIcons
-                                                                .hourglass),
-                                                                
-
-                                                              
-                                                        title: Text.rich(
-                                                          TextSpan(
-                                                            text: 'De ',
-                                                            children: [
+                                                          leading: circlecard(
+                                                              FontAwesomeIcons
+                                                                  .hourglass),
+                                                          title: Text.rich(
                                                               TextSpan(
-                                                                text: "${resultats['date_debut']}",
-                                                                style: GoogleFonts.andadaPro(fontWeight: FontWeight.bold)
-                                                              ),
-                                                              TextSpan(
-                                                                text: " à",
-
-                                                              ),
+                                                                  text: 'De ',
+                                                                  children: [
                                                                 TextSpan(
-                                                                  text: " ${resultats['date_fin']}",
+                                                                    text:
+                                                                        "${resultats['date_debut']}",
                                                                     style: GoogleFonts.andadaPro(
                                                                         fontWeight:
-                                                                            FontWeight.bold)
-                                                                )
-                                                            ]
-                                                          )
-                                                        )
-                                                      ),
+                                                                            FontWeight.bold)),
+                                                                TextSpan(
+                                                                  text: " à",
+                                                                ),
+                                                                TextSpan(
+                                                                    text:
+                                                                        " ${resultats['date_fin']}",
+                                                                    style: GoogleFonts.andadaPro(
+                                                                        fontWeight:
+                                                                            FontWeight.bold))
+                                                              ]))),
                                                       Divider(),
                                                       ListTile(
                                                         leading: circlecard(

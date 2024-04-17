@@ -6,6 +6,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/screen/ecranPrincipal/acceuil.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
+import 'package:gestion_salon_coiffure/Widget/cardMesPromotions.dart';
+import 'package:gestion_salon_coiffure/Widget/chargementPage.dart';
+import 'package:gestion_salon_coiffure/Widget/textRich.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/promotion/promotion_provider.dart';
 import 'package:get/get.dart';
@@ -92,23 +96,13 @@ class _Promotion_pageState extends State<Promotion_page>
 
   @override
   Widget build(BuildContext context) {
+    textStyleUtils customStyle = textStyleUtils();
     return Center(
       child: FutureBuilder(
           future: Future.delayed(const Duration(seconds: 1)),
           builder: (context, snapshot) {
             if (chargemnt == false) {
-              return const  Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CupertinoActivityIndicator(
-                      radius: 26,
-                      color: Colors.black,
-                    ),
-                   
-                  ],
-                ),
-              );
+              return chargementPage(titre: "Promotions", arrowback: false);
             }
 
             if (snapshot.hasError) {
@@ -119,15 +113,15 @@ class _Promotion_pageState extends State<Promotion_page>
                 child: Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.white,
                     bottom: TabBar(
                         unselectedLabelColor: Colors.black,
-                        labelColor: Colors.blue,
-                        indicatorColor: Colors.blue,
+                        labelColor: customStyle.getPrimaryColor(),
+                        indicatorColor: customStyle.getPrimaryColor(),
                         controller: _tabController,
                         tabs: [
                           Tab(
-                            child: Titre('Promotions', 15, Colors.white),
+                            child: Titre('Promotions', 25, Colors.black),
                           ),
                         ]),
                   ),
@@ -161,7 +155,7 @@ class _Promotion_pageState extends State<Promotion_page>
                                           final result = Mes_promotions[index];
                                           final date = result['date_debut'];
                                           final date1 = result['date_fin'];
-                                          final pourc = result['pourcentage'];
+                                          //  final pourc = result['pourcentage'];
                                           DateTime My = DateTime.parse(date);
                                           DateTime My1 = DateTime.parse(date1);
                                           String dateDeb =
@@ -171,269 +165,126 @@ class _Promotion_pageState extends State<Promotion_page>
                                               DateFormat.yMMMEd('fr_FR')
                                                   .format(My1);
 
-                                          return GestureDetector(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    //  color: Colors.black,
-                                                    border: Border.all(
-                                                        color: Colors.grey),
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(9),
-                                                      bottomRight:
-                                                          Radius.circular(9),
-                                                    )),
-                                                width: double.infinity,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Stack(
-                                                      children: [
-                                                        // Container(
-                                                        //     // color: Colors.red,
-                                                        //     height: 150,
-                                                        //     width: double.infinity,
-                                                        //     child: Image.asset(
-                                                        //       "assets/sales.png",
-                                                        //       fit: BoxFit.cover,
-                                                        //       height: 80,
-                                                        //       width: 80,
-                                                        //     )
-                                                        //      ),
+                                          return cardPromotions(
+                                              photos:
+                                                  "${result['service']['photos'][0]['path']}",
+                                              pourcentage:
+                                                  "${result['pourcentage']}",
+                                              libelle:
+                                                  "${result['service']['libelle']}",
+                                              prix: result['service']['tarif'],
+                                              dateDeb: dateDeb,
+                                              dateFin: dateFin,
+                                              flag: result['flag'],
+                                              tap: () {
+                                                promotions(result['id']);
 
-                                                        Image.network(
-                                                          ImgDB(
-                                                              '${result['service']['photos'][0]['path']}'),
-                                                          fit: BoxFit.cover,
-                                                          width:
-                                                              double.infinity,
-                                                          height: 100,
+                                                showModalBottomSheet(
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    // isScrollControlled: true,
+                                                    elevation: 8,
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return Scaffold(
+                                                        appBar: AppBar(
+                                                          backgroundColor:
+                                                              Colors.white,
                                                         ),
-
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .topRight,
-                                                          child: Container(
-                                                            color: Colors.blue,
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(10),
-                                                              child: Text(
-                                                                "${result['pourcentage']}%",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        20),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10.0),
-                                                      child: Container(
-                                                        color: Colors.white,
-                                                        width: double.infinity,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Row(
+                                                        body:
+                                                            SingleChildScrollView(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
-                                                                      .spaceBetween,
+                                                                      .start,
                                                               children: [
-                                                                Container(
-                                                                  child: Text(
-                                                                    '${result['service']['libelle']}',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            15,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  ),
+                                                                Center(
+                                                                    child: Titre(
+                                                                        "Détails sur la promotion",
+                                                                        18,
+                                                                        Colors
+                                                                            .black)),
+                                                                const SizedBox(
+                                                                  height: 25,
                                                                 ),
-                                                                // Container(
-                                                                //   color: Colors.blue,
+
+                                                                textRich(
+                                                                    titre:
+                                                                        "Libelle : ",
+                                                                    soustitre: result[
+                                                                            'service']
+                                                                        [
+                                                                        'libelle']),
+                                                                SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                textRich(
+                                                                    titre:
+                                                                        "Objet : ",
+                                                                    soustitre:
+                                                                        result[
+                                                                            'objet']),
+                                                                SizedBox(
+                                                                  height: 10,
+                                                                ),
+
+                                                                textRich(
+                                                                    titre:
+                                                                        "Prix : ",
+                                                                    soustitre:
+                                                                        "${double.parse(result['service']['tarif']) - int.parse(result['cost'])}"),
+                                                                SizedBox(
+                                                                  height: 15,
+                                                                ),
+
+                                                                textRich(
+                                                                    titre:
+                                                                        "Date : ",
+                                                                    soustitre:
+                                                                        "Du $dateDeb au $dateFin")
+
+                                                                //      Container(
+                                                                //   decoration: BoxDecoration(
+                                                                //       borderRadius:
+                                                                //           BorderRadius
+                                                                //               .circular(
+                                                                //                   5),
+                                                                //       border: Border.all(
+                                                                //           color: Colors
+                                                                //               .grey)),
                                                                 //   child: Padding(
                                                                 //     padding:
                                                                 //         const EdgeInsets
-                                                                //             .all(2.0),
+                                                                //             .all(
+                                                                //             4.0),
                                                                 //     child: Text(
-                                                                //       '${result['objet']}',
-                                                                //       style: TextStyle(
-                                                                //           fontSize: 15,
-                                                                //           color: Colors
-                                                                //               .white,
-                                                                //           fontWeight:
-                                                                //               FontWeight
-                                                                //                   .bold),
+                                                                //       '${double.parse(result['service']['tarif']) - int.parse(result['cost'])} FCFA',
+                                                                //       style: GoogleFonts
+                                                                //           .openSans(
+                                                                //         fontSize:
+                                                                //             15,
+                                                                //         fontWeight:
+                                                                //             FontWeight
+                                                                //                 .bold,
+                                                                //       ),
                                                                 //     ),
                                                                 //   ),
                                                                 // ),
                                                               ],
                                                             ),
-                                                            Container(
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              5),
-                                                                  border: Border.all(
-                                                                      color: Colors
-                                                                          .grey)),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        4.0),
-                                                                child: Text(
-                                                                  '${double.parse(result['service']['tarif']) - int.parse(result['cost'])} FCFA',
-                                                                  style: GoogleFonts
-                                                                      .openSans(
-                                                                    fontSize:
-                                                                        15,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              '${result['service']['tarif']} FCFA',
-                                                              style: GoogleFonts
-                                                                  .openSans(
-                                                                fontSize: 15,
-                                                                color:
-                                                                    Colors.grey,
-                                                                decorationColor:
-                                                                    Colors
-                                                                        .black,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .lineThrough,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              child: NewBold(
-                                                                  ' Du $dateDeb  au  $dateFin ',
-                                                                  12,
-                                                                  Colors.black),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 3,
-                                                            ),
-                                                            if (result[
-                                                                    'flag'] ==
-                                                                0)
-                                                              Container(
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10),
-                                                                    color: Colors
-                                                                        .red),
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: texte(
-                                                                      "Non lu"),
-                                                                ),
-                                                              )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              // promotionNonlu();
-                                              promotions(result['id']);
-
-                                              showModalBottomSheet(
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  // isScrollControlled: true,
-                                                  elevation: 8,
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return Scaffold(
-                                                      appBar: AppBar(
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                      ),
-                                                      body:
-                                                          SingleChildScrollView(
-                                                        child: Center(
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Container(
-                                                                decoration: BoxDecoration(
-                                                                    color: Colors
-                                                                        .blue,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            9)),
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: Titre(
-                                                                      '${result['objet']}',
-                                                                      20,
-                                                                      Colors
-                                                                          .white),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 20,
-                                                              ),
-                                                              // Titre(
-                                                              //   '',
-                                                              //   18,
-                                                              //   Colors.black,
-                                                              // ),
-                                                              Mytext(
-                                                                  '  ${result['description']}  ',
-                                                                  20,
-                                                                  Colors.black),
-                                                            ],
                                                           ),
                                                         ),
-                                                      ),
-                                                    );
-                                                  });
-                                            },
-                                          );
+                                                      );
+                                                    });
+                                              });
                                         },
                                         separatorBuilder: ((context, index) =>
                                             SizedBox(
@@ -452,24 +303,4 @@ class _Promotion_pageState extends State<Promotion_page>
           }),
     );
   }
-}
-
-class TicketClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-
-    path.lineTo(0.0, size.height);
-    path.lineTo(size.width, size.height);
-    path.lineTo(size.width, 0.0);
-
-    path.addOval(
-        Rect.fromCircle(center: Offset(0, size.height / 2), radius: 15));
-    path.addOval(Rect.fromCircle(
-        center: Offset(size.width, size.height / 2), radius: 15));
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

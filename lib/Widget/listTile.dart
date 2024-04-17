@@ -9,7 +9,7 @@ class CustomListTile extends StatelessWidget {
   const CustomListTile({
     required this.title,
     required this.taille,
-   required this.onTap, // Ajoutez cette ligne
+    required this.onTap, // Ajoutez cette ligne
   });
 
   @override
@@ -18,9 +18,9 @@ class CustomListTile extends StatelessWidget {
     return ListTile(
       title: Text(
         "$title",
-        style: textstyle.soustitre(Colors.black, taille),
+        style: textstyle.curenttext(Colors.black, taille),
       ),
-      onTap: onTap, 
+      onTap: onTap,
     );
   }
 }

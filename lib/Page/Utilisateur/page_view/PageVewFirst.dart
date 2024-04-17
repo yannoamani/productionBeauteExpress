@@ -36,71 +36,71 @@ class _TabViewState extends State<TabView> {
             controller: control,
             children: [
               MaPremiere(),
-              Second(),
+              // Second(),
             ],
           ),
-          Container(
-            alignment: Alignment(0, 0.90),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                //           TextButton(
+          // Container(
+          //   alignment: Alignment(0, 0.90),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //     children: [
+          //       //           TextButton(
 
-                //             child: Text("Passer$Navig"),
-                //           ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.grey),
-                    ),
-                    onPressed: () {
-                      control.previousPage(
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.bounceIn);
-                    },
-                    child: FaIcon(
-                      FontAwesomeIcons.arrowLeft,
-                      color: Colors.black,
-                    )),
-                SmoothPageIndicator(controller: control, count: 2),
-                Navig < 1
-                    ? ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.blue),
-                        ),
-                        onPressed: () {
-                          control.nextPage(
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.linear);
-                        },
-                        child: FaIcon(
-                          FontAwesomeIcons.arrowRight,
-                          color: Colors.white,
-                        ))
-                    : GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => const Login_page()),
-                          );
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 50,
-                          width: 50,
-                          decoration: const BoxDecoration(
-                              color: Colors.yellow, shape: BoxShape.circle),
-                          child: Text("OK",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-              ],
-            ),
-          )
+          //       //             child: Text("Passer$Navig"),
+          //       //           ),
+          //       ElevatedButton(
+          //           style: ButtonStyle(
+          //             backgroundColor:
+          //                 MaterialStateProperty.all<Color>(Colors.grey),
+          //           ),
+          //           onPressed: () {
+          //             control.previousPage(
+          //                 duration: Duration(milliseconds: 500),
+          //                 curve: Curves.bounceIn);
+          //           },
+          //           child: FaIcon(
+          //             FontAwesomeIcons.arrowLeft,
+          //             color: Colors.black,
+          //           )),
+          //       SmoothPageIndicator(controller: control, count: 2),
+          //       Navig < 1
+          //           ? ElevatedButton(
+          //               style: ButtonStyle(
+          //                 backgroundColor:
+          //                     MaterialStateProperty.all<Color>(Colors.blue),
+          //               ),
+          //               onPressed: () {
+          //                 control.nextPage(
+          //                     duration: Duration(milliseconds: 500),
+          //                     curve: Curves.linear);
+          //               },
+          //               child: FaIcon(
+          //                 FontAwesomeIcons.arrowRight,
+          //                 color: Colors.white,
+          //               ))
+          //           : GestureDetector(
+          //               onTap: () {
+          //                 Navigator.of(context).pushReplacement(
+          //                   MaterialPageRoute(
+          //                       builder: (context) => const Login_page()),
+          //                 );
+          //               },
+          //               child: Container(
+          //                 alignment: Alignment.center,
+          //                 height: 50,
+          //                 width: 50,
+          //                 decoration: const BoxDecoration(
+          //                     color: Colors.yellow, shape: BoxShape.circle),
+          //                 child: Text("OK",
+          //                     style: TextStyle(
+          //                         fontSize: 18,
+          //                         color: Colors.black,
+          //                         fontWeight: FontWeight.bold)),
+          //               ),
+          //             ),
+          //     ],
+          //   ),
+          // )
         ],
       ),
     );

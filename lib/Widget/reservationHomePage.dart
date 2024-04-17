@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 
 class reservationHomePage extends StatelessWidget {
@@ -22,9 +23,10 @@ class reservationHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    textStyleUtils textstyle = textStyleUtils();
     return Container(
       decoration: BoxDecoration(
-          color: Colors.blue,
+          color: textstyle.getPrimaryColor(),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5), // Couleur de l'ombre
@@ -87,6 +89,6 @@ class reservationHomePage extends StatelessWidget {
         ),
       ),
     );
-    ;
+    
   }
 }

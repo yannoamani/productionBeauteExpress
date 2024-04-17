@@ -7,6 +7,7 @@ import 'package:gestion_salon_coiffure/Page/Utilisateur/promotion/promotion_prov
 import 'package:gestion_salon_coiffure/Utils/utils.dart';
 import 'package:gestion_salon_coiffure/Widget/cardCoupons.dart';
 import 'package:gestion_salon_coiffure/Widget/cardService.dart';
+import 'package:gestion_salon_coiffure/Widget/cardnotReservation.dart';
 import 'package:gestion_salon_coiffure/Widget/chargementPage.dart';
 import 'package:gestion_salon_coiffure/Widget/details.dart';
 import 'package:gestion_salon_coiffure/Widget/listTile.dart';
@@ -159,265 +160,263 @@ class _First_pageState extends State<First_page> {
               return Text(snapshot.error.toString());
             } else {
               return Scaffold(
-                  body: WillPopScope(
-                      onWillPop: () async {
-                        message(context, 'Impossible de revenir', Colors.red);
-                        return false;
+                  body: SafeArea(
+                child: WillPopScope(
+                    onWillPop: () async {
+                      message(context, 'Impossible de revenir', Colors.red);
+                      return false;
+                    },
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        await ReservationAvenir();
+                        entreprise();
+                        // get();
                       },
-                      child: RefreshIndicator(
-                        onRefresh: () async {
-                          await ReservationAvenir();
-                          entreprise();
-                          // get();
-                        },
-                        child: Scrollbar(
-                          child: CustomScrollView(
-                            slivers: [
-                              SliverAppBar(
-                                  automaticallyImplyLeading: false,
-                                  backgroundColor: Colors.grey[100],
-                                  title: Text.rich(TextSpan(
-                                      text: "Hey",
-                                      style: textStyeCUstom.titreStyle(
-                                          Colors.black, 24.0),
-                                      children: [
-                                        TextSpan(
-                                            text: ' $nom',
-                                            style: textStyeCUstom.titreStyle(
-                                                Colors.black, 20.0))
-                                      ])),
-                                  actions: [
-                                    popupButton(items: [
-                                      PopupMenuItem(
-                                          child: CustomListTile(
-                                              title: "Déconnexion",
-                                              taille: 15,
-                                              onTap: () async {
-                                                final prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                prefs.remove('token');
-                                                prefs.remove('name');
-                                                prefs.remove('prenom');
-                                                prefs.remove('phone');
-                                                prefs.remove('email');
-                                                Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Login_page()),
-                                                  (route) => false,
-                                                );
-                                              }))
-                                    ]),
+                      child: Scrollbar(
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverAppBar(
+                                automaticallyImplyLeading: false,
+                                backgroundColor: Colors.grey[100],
+                                title: Text.rich(TextSpan(
+                                    text: "Hey",
+                                    style: textStyeCUstom.curenttext(
+                                        Colors.black, 20.0),
+                                    children: [
+                                      TextSpan(
+                                          text: ' $nom',
+                                          style: textStyeCUstom.titreStyle(
+                                              Colors.black, 20.0))
+                                    ])),
+                                actions: [
+                                  popupButton(items: [
+                                    PopupMenuItem(
+                                        child: CustomListTile(
+                                            title: "Déconnexion",
+                                            taille: 15,
+                                            onTap: () async {
+                                              final prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              prefs.remove('token');
+                                              prefs.remove('name');
+                                              prefs.remove('prenom');
+                                              prefs.remove('phone');
+                                              prefs.remove('email');
+                                              Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Login_page()),
+                                                (route) => false,
+                                              );
+                                            }))
                                   ]),
-                              SliverToBoxAdapter(
-                                child: RefreshIndicator(
-                                  strokeWidth: 4,
-                                  color: const Color(0xFF0A345F),
-                                  backgroundColor: Colors.white,
-                                  onRefresh: () async {
-                                    await ReservationAvenir();
-                                    getCouponsActif();
-                                    entreprise();
-                                    // get();
-                                  },
-                                  child: SingleChildScrollView(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          // SizedBox(
-                                          //   height: 10,
-                                          // ),
-                                          if (Reservation_A_V.isNotEmpty)
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Mes reservations",
-                                                  style:
-                                                      textStyeCUstom.soustitre(
-                                                          Colors.black, 20),
+                                ]),
+                            SliverToBoxAdapter(
+                              child: RefreshIndicator(
+                                strokeWidth: 4,
+                                color: const Color(0xFF0A345F),
+                                backgroundColor: Colors.white,
+                                onRefresh: () async {
+                                  await ReservationAvenir();
+                                  getCouponsActif();
+                                  entreprise();
+                                  // get();
+                                },
+                                child: SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // SizedBox(
+                                        //   height: 10,
+                                        // ),
+
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Mes reservations",
+                                              style: textStyeCUstom.soustitre(
+                                                  Colors.black, 20),
+                                            ),
+                                            const Spacer(),
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return Mes_reservations();
+                                                  }));
+                                                },
+                                                child: Mytext(
+                                                    'Voir plus',
+                                                    15,
+                                                    textStyeCUstom
+                                                        .getPrimaryColor()))
+                                          ],
+                                        ),
+                                        if (Reservation_A_V.isNotEmpty)
+                                          Container(
+                                              height: 122,
+                                              width: double.infinity,
+                                              child: ListView.separated(
+                                                separatorBuilder:
+                                                    (context, index) =>
+                                                        const SizedBox(
+                                                  width: 10,
                                                 ),
-                                                const Spacer(),
-                                                TextButton(
-                                                    onPressed: () {
+                                                itemCount:
+                                                    Reservation_A_V.length,
+                                                itemBuilder: (context, index) {
+                                                  final result =
+                                                      Reservation_A_V[index];
+                                                  final date = result['date'];
+                                                  DateTime My =
+                                                      DateTime.parse(date);
+                                                  String Days =
+                                                      DateFormat.EEEE('fr_FR')
+                                                          .format(My);
+                                                  String Mounth =
+                                                      DateFormat.MMM('fr_FR')
+                                                          .format(My);
+
+                                                  return reservationHomePage(
+                                                      Days: Days,
+                                                      chiffre: "${My.day}",
+                                                      mounth: Mounth,
+                                                      libelleService:
+                                                          result['service']
+                                                              ['libelle'],
+                                                      heure: result['heure'],
+                                                      montant:
+                                                          result['montant'],
+                                                      status: result['status']);
+                                                },
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                              )),
+                                        if (Reservation_A_V.isEmpty)
+                                          cardNotReservation(),
+                                        // if (Reservation_A_V.isEmpty)
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          "Services",
+                                          style: textStyeCUstom.titreStyle(
+                                              Colors.black, 20),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          height: 300,
+                                          color: Colors.transparent,
+                                          child: ListView.separated(
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (context, index) {
+                                                final info = donne[index];
+                                                var photos;
+                                                var iden;
+                                                List promotion =
+                                                    info['promotions'];
+
+                                                for (var element
+                                                    in info['photos']) {
+                                                  iden = element['id'];
+                                                  photos = element['path'];
+                                                  // print(photos);
+                                                }
+
+                                                return cardService(
+                                                    photos: photos,
+                                                    libelle:
+                                                        "${info['libelle']}",
+                                                    tarif: info['tarif'],
+                                                    moyenne: info[
+                                                        'moyenne_Services'],
+                                                    onTap: () async {
+                                                      final prefs =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      setState(() {
+                                                        prefs.setInt(
+                                                            'id_service',
+                                                            info['id']);
+                                                      });
+                                                      print(prefs.getInt(
+                                                          'id_service'));
+
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder:
                                                                   (context) {
-                                                        return Mes_reservations();
+                                                        return Mesdetails(
+                                                            serviceData: info);
                                                       }));
-                                                    },
-                                                    child: Mytext('Voir plus',
-                                                        15, Colors.blue))
-                                              ],
-                                            ),
-                                          if (Reservation_A_V.isNotEmpty)
-                                            Container(
-                                                height: 122,
-                                                width: double.infinity,
-                                                child: ListView.separated(
-                                                  separatorBuilder:
-                                                      (context, index) =>
-                                                          const SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  itemCount:
-                                                      Reservation_A_V.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final result =
-                                                        Reservation_A_V[index];
-                                                    final date = result['date'];
-                                                    DateTime My =
-                                                        DateTime.parse(date);
-                                                    String Days =
-                                                        DateFormat.EEEE('fr_FR')
-                                                            .format(My);
-                                                    String Mounth =
-                                                        DateFormat.MMM('fr_FR')
-                                                            .format(My);
-
-                                                    return reservationHomePage(
-                                                        Days: Days,
-                                                        chiffre: "${My.day}",
-                                                        mounth: Mounth,
-                                                        libelleService:
-                                                            result['service']
-                                                                ['libelle'],
-                                                        heure: result['heure'],
-                                                        montant:
-                                                            result['montant'],
-                                                        status:
-                                                            result['status']);
+                                                    });
+                                              },
+                                              separatorBuilder: (context, _) =>
+                                                  SizedBox(width: 10),
+                                              itemCount: donne.length),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        if (mesCoupons.isNotEmpty)
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Mes coupons",
+                                                style: textStyeCUstom.soustitre(
+                                                    Colors.black, 20),
+                                              ),
+                                              Spacer(),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                            builder: (context) =>
+                                                                allCOupons()));
                                                   },
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                )),
-                                          if (Reservation_A_V.isNotEmpty)
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                          Text(
-                                            "Services",
-                                            style: textStyeCUstom.titreStyle(
-                                                Colors.black, 20),
+                                                  child: Mytext('Voir plus', 15,
+                                                      Colors.blue))
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                            height: 300,
-                                            color: Colors.transparent,
-                                            child: ListView.separated(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemBuilder: (context, index) {
-                                                  final info = donne[index];
-                                                  var photos;
-                                                  var iden;
-                                                  List promotion =
-                                                      info['promotions'];
-
-                                                  for (var element
-                                                      in info['photos']) {
-                                                    iden = element['id'];
-                                                    photos = element['path'];
-                                                    // print(photos);
-                                                  }
-
-                                                  return cardService(
-                                                      photos: photos,
-                                                      libelle:
-                                                          "${info['libelle']}",
-                                                      tarif: info['tarif'],
-                                                      moyenne: info[
-                                                          'moyenne_Services'],
-                                                      onTap: () async {
-                                                        final prefs =
-                                                            await SharedPreferences
-                                                                .getInstance();
-                                                        setState(() {
-                                                          prefs.setInt(
-                                                              'id_service',
-                                                              info['id']);
-                                                        });
-                                                        print(prefs.getInt(
-                                                            'id_service'));
-
-                                                        Navigator.of(context).push(
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return Mesdetails(
-                                                              serviceData:
-                                                                  info);
-                                                        }));
-                                                      });
-                                                },
-                                                separatorBuilder:
-                                                    (context, _) =>
-                                                        SizedBox(width: 10),
-                                                itemCount: donne.length),
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          if (mesCoupons.isNotEmpty)
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "Mes coupons",
-                                                  style:
-                                                      textStyeCUstom.soustitre(
-                                                          Colors.black, 20),
-                                                ),
-                                                Spacer(),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                              builder: (context) =>
-                                                                  allCOupons()));
-                                                    },
-                                                    child: Mytext('Voir plus',
-                                                        15, Colors.blue))
-                                              ],
-                                            ),
-                                        ],
-                                      ),
+                                      ],
                                     ),
                                   ),
                                 ),
                               ),
-                              SliverList.builder(
-                                  itemCount: mesCoupons.length,
-                                  itemBuilder: (context, index) {
-                                    final result = mesCoupons[index];
-                                    String date = result['expiration'];
-                                    DateTime conver = DateTime.parse(date);
-                                    String newDate =
-                                        DateFormat.yMMMMEEEEd('fr_FR')
-                                            .format(conver);
-                                    return cardCoupons(
-                                        status: "${result['status']}",
-                                        code: result['code'],
-                                        expiration: newDate,
-                                        pourcentage: result['pourcentage']);
-                                  })
-                            ],
-                          ),
+                            ),
+                            SliverList.builder(
+                                itemCount: mesCoupons.length,
+                                itemBuilder: (context, index) {
+                                  final result = mesCoupons[index];
+                                  String date = result['expiration'];
+                                  DateTime conver = DateTime.parse(date);
+                                  String newDate =
+                                      DateFormat.yMMMMEEEEd('fr_FR')
+                                          .format(conver);
+                                  return cardCoupons(
+                                      status: "${result['status']}",
+                                      code: result['code'],
+                                      expiration: newDate,
+                                      pourcentage: result['pourcentage']);
+                                })
+                          ],
                         ),
-                      )));
+                      ),
+                    )),
+              ));
             }
           }),
     );

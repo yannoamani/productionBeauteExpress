@@ -1,11 +1,10 @@
 import 'dart:async';
 
-
 import 'package:flutter/material.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/screen/ecranPrincipal/acceuil.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class Congratulation extends StatefulWidget {
   const Congratulation({super.key});
@@ -40,15 +39,15 @@ class _CongratulationState extends State<Congratulation> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  height: 200,
-                  child: Image.asset(
-                    'assets/best-seller.png',
-                    // fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
-                ),
+                // Container(
+                //   height: 200,
+                //   child: Image.asset(
+                //     'assets/best-seller.png',
+                //     // fit: BoxFit.cover,
+                //     width: double.infinity,
+                //     height: double.infinity,
+                //   ),
+                // ),
                 Center(
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
@@ -57,20 +56,18 @@ class _CongratulationState extends State<Congratulation> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Center(
-                          child: Text(
-                            "Felicitation !",
-                            textAlign: TextAlign.center,
-                            
-                            style: GoogleFonts.andadaPro(fontSize: 40,
-                                color: Colors.black, 
-                                fontWeight: FontWeight.bold
-                                  
-                            ),
-                          ),
-                        
+                          child: Text("Felicitation !",
+                              textAlign: TextAlign.center,
+                              style: textStyleUtils()
+                                  .titreStyle(Colors.black, 30)),
                         ),
-                        SizedBox(height: 15,),
-                        Mytext("Votre réservation a été faite avec succès et elle est actuellement en attente. Vous serez redirigé vers la page principale dans 5 secondes.", 20, Colors.grey),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Mytext(
+                            "Votre réservation a été faite avec succès et elle est actuellement en attente. Vous serez redirigé vers la page principale dans 5 secondes.",
+                            20,
+                            Colors.grey),
                         Icon(
                           Icons.done_outline,
                           size: 100,

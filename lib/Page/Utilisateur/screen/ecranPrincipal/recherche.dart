@@ -5,11 +5,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/screen/ecranPrincipal/Info_Service.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/promotion/promotion_page.dart';
+import 'package:gestion_salon_coiffure/Page/Utilisateur/screen/ecranPrincipal/acceuil.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
+import 'package:gestion_salon_coiffure/Widget/boutton.dart';
 import 'package:gestion_salon_coiffure/Widget/cardRecherche.dart';
 import 'package:gestion_salon_coiffure/Widget/cardScrollRecherche.dart';
 import 'package:gestion_salon_coiffure/Widget/chargementPage.dart';
@@ -49,7 +53,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   String token = "";
 
-  List getService = [];
+  static List getService = <String>[];
   List Fountservice = [];
 
   Future<void> Get_Service() async {
@@ -97,6 +101,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   int rating = 0;
+  textStyleUtils monStyle = textStyleUtils();
 
   @override
   void initState() {
@@ -104,6 +109,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     connection();
     Get_Service();
   }
+
+  bool tabvide = false;
 
   void filter(String indice) {
     List result = [];
@@ -119,7 +126,21 @@ class _ExploreScreenState extends State<ExploreScreen> {
       setState(() {
         Fountservice = result;
       });
+       if (result.isEmpty) {
+      setState(() {
+        tabvide = true;
+      });
+      print("je suis $tabvide");
+      // throw Exception('Aucun résultat trouvé.');
     }
+    else{
+       setState(() {
+        tabvide = false;
+      });
+
+    }
+    }
+   
   }
 
   @override
@@ -128,121 +149,123 @@ class _ExploreScreenState extends State<ExploreScreen> {
       child: FutureBuilder(
         future: getdate(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              getService.isEmpty) {
+          if (getService.isEmpty) {
             return const chargementPage(titre: "", arrowback: false);
-         
           }
           if (snapshot.hasError) {
             return Text(snapshot.hasError.toString());
           } else {
             return Scaffold(
-              backgroundColor: Colors.grey[100],
-              body: Scrollbar(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //  moncontainer("", () {}, search, filter), Au cas où je nn'arrive pas
-
-                    Container(
-                      height: 140,
-                      color: Colors.blue,
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
+                backgroundColor: Colors.grey[100],
+                body: WillPopScope(
+                  onWillPop: () async {
+                      Navigator.of(context)
+                          .push(CupertinoPageRoute(builder: (context) {
+                        return acceuil();
+                      }));
+                      return false;
+                    },
+                  child: SafeArea(
+                    child: CustomScrollView(
+                      slivers: [
+                        // SliverAppBar(
+                        //   floating: true,
+                        //   pinned: true,
+                        //   expandedHeight: 300,
+                        //   flexibleSpace: FlexibleSpaceBar(
+                        //       background: Container(
+                        //     height: double.infinity,
+                        //     width: double.infinity,
+                        //     decoration: const BoxDecoration(
+                        //       image: DecorationImage(
+                        //         image: AssetImage(
+                        //             'assets/pexels-nothing-ahead-3230236.jpg'),
+                        //         fit: BoxFit
+                        //             .cover, // specify the fit property if needed
+                        //       ),
+                        //     ),
+                        //   )),
+                        // ),
+                        // SliverList.separated(itemBuilder: itemBuilder, separatorBuilder: separatorBuilder)
+                        SliverToBoxAdapter(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Titre("Recherche", 30, Colors.black),
                               SizedBox(
-                                height: 25,
+                                height: 15,
                               ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 45,
-                                      width: 220,
-                                      child: TextFormField(
-                                        controller: search,
-                                        onChanged: (value) {
-                                          // filter(value);
-                                        },
-                                        decoration: InputDecoration(
-                                            prefixIcon: Icon(
-                                              Icons.search,
-                                              color: Colors.blue,
-                                            ),
-                                            suffixIcon: IconButton(
-                                                onPressed: () {
-                                                  search.clear();
-                                                },
-                                                icon: Icon(Icons.close)),
-                                            floatingLabelBehavior:
-                                                FloatingLabelBehavior.never,
-                                            labelText: 'Rechercher',
-                                            labelStyle:
-                                                TextStyle(color: Colors.black),
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.blue))),
+                              Autocomplete<String>(
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text.isEmpty) {
+                                    return <String>[];
+                                  } else {
+                                    return getService
+                                        .where((element) => element['libelle']
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text))
+                                        .map((element) =>
+                                            element['libelle'].toString())
+                                        .toList();
+                                  }
+                                },
+                                onSelected: (option) {
+                                  filter(option);
+                                },
+                                fieldViewBuilder: (BuildContext context,
+                                    TextEditingController textEditingController,
+                                    FocusNode focusNode,
+                                    VoidCallback onFieldSubmitted) {
+                                  return TextField(
+                                    style: monStyle.curenttext(Colors.black, 20),
+                                    controller: textEditingController,
+                                    focusNode: focusNode,
+                                    onChanged: (text) {
+                                      setState(() {
+                                        search.text = text;
+                                      });
+                                      // Mettre à jour les options ici en fonction du texte saisi
+                                      // par exemple, en utilisant votre logique existante avec getService
+                                    },
+                                    onSubmitted: (text) {
+                                      // Traitez la valeur soumise ici
+                                      onFieldSubmitted();
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Rechercher...',
+                                      hintStyle:
+                                          monStyle.curenttext(Colors.black, 15),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
+                                      prefixIcon: Icon(Icons.search),
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    ElevatedButton(
-                                        style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.zero,
-                                            ),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            filter(search.text);
-                                          });
-                                        },
-                                        child: Mytext(
-                                            "Recherche", 15, Colors.blue))
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 15,
                               ),
-                              Center(
-                                child: Container(
-                                  height: 40,
-                                  child: ListView.separated(
-                                    separatorBuilder: (context, index) {
-                                      return SizedBox(
-                                        width: 10,
-                                      );
-                                    },
-                                    itemBuilder: (context, index) {
-                                      final resulat = getService[index];
-                                      return cardRecherche1(
-                                          libelle: resulat['libelle']);
-                                    },
-                                    itemCount: getService.length,
-                                    scrollDirection: Axis.horizontal,
-                                  ),
-                                ),
+                              bouttonCustom(
+                                  titre: "Recherche ",
+                                  couleur: Colors.blue,
+                                  tap: () {
+                                    filter(search.text);
+                                  }),
+                              SizedBox(
+                                height: 20,
                               )
                             ],
                           ),
-                        ),
-                      ),
-                    ),
-
-                    Expanded(
-                      child: Container(
-                        child: ListView.separated(
+                        )),
+                        
+                        tabvide==true?mesreservations("Aucun service correspondant"):
+                        SliverList.separated(
                             separatorBuilder: (context, _) => SizedBox(
                                   height: 20,
                                 ),
@@ -251,41 +274,31 @@ class _ExploreScreenState extends State<ExploreScreen> {
                               final resulat = Fountservice[index];
                               final List photos = resulat['photos'];
                               final List promotions = resulat['promotions'];
-
-                              // final promotion = resulat['promotions'];
-                              // var photo;
-                              // for (var img in photos) {
-                              //   photo = img['path'];
-                              //   // print(photo);
-                              // }
-
+                  
                               return cardRecherche(
                                   carousel: carousel,
                                   photos: photos,
                                   libelle: "${resulat['libelle']}",
                                   prix: resulat['tarif'],
-                                  description:"${ resulat['description']}",
+                                  description: "${resulat['description']}",
                                   onTap: () async {
-                                       id = resulat['id'];
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-                                  setState(() {
-                                    prefs.setInt('id_service', id);
-                                  });
-                                  print(id);
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) {
-                                    return  Mesdetails(serviceData: resulat);
-                                  }));
-
+                                    id = resulat['id'];
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    setState(() {
+                                      prefs.setInt('id_service', id);
+                                    });
+                                    print(id);
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return Mesdetails(serviceData: resulat);
+                                    }));
                                   });
                             }),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
+                      ],
+                    ),
+                  ),
+                ));
           }
         },
       ),

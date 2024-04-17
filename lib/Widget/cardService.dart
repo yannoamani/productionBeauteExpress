@@ -4,22 +4,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class cardService extends StatelessWidget {
   final String photos;
   final String libelle;
   final String tarif;
   final int moyenne;
-   final Callback onTap;
-  const cardService({required this.photos,required this.libelle,required this.tarif,required this.moyenne,
-  required this.onTap
-  });
+  final Callback onTap;
+  const cardService(
+      {required this.photos,
+      required this.libelle,
+      required this.tarif,
+      required this.moyenne,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-     
       child: Container(
         width: 300 - 60,
         height: 300 - 20,
@@ -65,10 +66,10 @@ class cardService extends StatelessWidget {
                       child: Text(
                         '${libelle}',
 
-                        style: GoogleFonts.openSans(
-                            color: Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold),
+                        style: GoogleFonts.poppins(
+                          color: Colors.black,
+                          fontSize: 15,
+                        ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1, // Set the maximum number of lines to 1,
                       ),
@@ -82,8 +83,7 @@ class cardService extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5)),
                       child: Padding(
                           padding: EdgeInsets.all(2.0),
-                          child: Titre(
-                              ' ${tarif} FCFA', 13, Colors.black)),
+                          child: Titre(' ${tarif} FCFA', 13, Colors.black)),
                     ),
                     SizedBox(
                       height: 10,
@@ -96,9 +96,7 @@ class cardService extends StatelessWidget {
                               i < moyenne
                                   ? FontAwesomeIcons.solidStar
                                   : FontAwesomeIcons.star,
-                              color: i <moyenne
-                                  ? Colors.amber
-                                  : Colors.black,
+                              color: i < moyenne ? Colors.amber : Colors.black,
                               size: 15,
                             )
                         ],

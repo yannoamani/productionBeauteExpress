@@ -13,7 +13,7 @@ class carMesresevations extends StatelessWidget {
   final String prix;
   final Callback ontap;
   final bool isEncours;
-   carMesresevations(
+  carMesresevations(
       {required this.Days,
       required this.chiffre,
       required this.Mounth,
@@ -21,13 +21,12 @@ class carMesresevations extends StatelessWidget {
       required this.heure,
       required this.prix,
       required this.ontap,
-      required this.isEncours
-      });
+      required this.isEncours});
 
   @override
   Widget build(BuildContext context) {
     textStyleUtils Textsyutils = textStyleUtils();
-    return  GestureDetector(
+    return GestureDetector(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Container(
@@ -36,9 +35,9 @@ class carMesresevations extends StatelessWidget {
                 boxShadow: [
                   const BoxShadow(
                     // Couleur de l'ombre
-                    spreadRadius: 5, // Étendue de l'ombre
-                    blurRadius: 7, // Flou de l'ombre
-                    offset: Offset(0, 3), // Décalage de l'ombre
+                    spreadRadius: 1, // Étendue de l'ombre
+                    // blurRadius: 7, // Flou de l'ombre
+                    // offset: Offset(0, 3), // Décalage de l'ombre
                   ),
                 ],
                 borderRadius: BorderRadius.circular(10)),
@@ -71,7 +70,7 @@ class carMesresevations extends StatelessWidget {
                             "$libelle",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Textsyutils.soustitre(Colors.black, 15),
+                            style: Textsyutils.titreStyle(Colors.black, 15),
                           ),
                         ),
                         const SizedBox(
@@ -91,9 +90,10 @@ class carMesresevations extends StatelessWidget {
                       ],
                     ),
                   ),
-                 if(isEncours==true) CupertinoActivityIndicator(
-                    color: Colors.indigo,
-                  )
+                  if (isEncours == true)
+                    CupertinoActivityIndicator(
+                      color: Colors.indigo,
+                    )
                 ],
               ),
             ),

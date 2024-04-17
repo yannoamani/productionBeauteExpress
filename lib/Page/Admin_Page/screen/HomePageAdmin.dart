@@ -12,6 +12,7 @@ import 'package:gestion_salon_coiffure/Page/Admin_Page/reservationAdmin/ReservPr
 import 'package:gestion_salon_coiffure/Page/Admin_Page/reservationAdmin/RservTraite.dart';
 import 'package:gestion_salon_coiffure/Page/Admin_Page/reservationAdmin/reservation_en_cours.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/Login_page/login_page.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
 import 'package:gestion_salon_coiffure/Widget/chargementPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:gestion_salon_coiffure/Page/Utilisateur/screen/ecranPrincipal/compte.dart';
@@ -49,11 +50,11 @@ class _Home_AdminState extends State<Home_Admin> {
             });
           },
           selectedIndex: num,
-          destinations: const [
+          destinations: [
             NavigationDestination(
               selectedIcon: FaIcon(
                 CupertinoIcons.home,
-                color: Colors.blue,
+                color: textStyleUtils().getPrimaryColor(),
               ),
               icon: FaIcon(
                 CupertinoIcons.home,
@@ -64,7 +65,7 @@ class _Home_AdminState extends State<Home_Admin> {
             NavigationDestination(
                 selectedIcon: FaIcon(
                   CupertinoIcons.square_list,
-                  color: Colors.blue,
+                  color: textStyleUtils().getPrimaryColor(),
                 ),
                 icon: FaIcon(
                   CupertinoIcons.square_list,
@@ -74,7 +75,7 @@ class _Home_AdminState extends State<Home_Admin> {
             NavigationDestination(
               selectedIcon: FaIcon(
                 FontAwesomeIcons.user,
-                color: Colors.blue,
+                color: textStyleUtils().getPrimaryColor(),
               ),
               icon: FaIcon(
                 FontAwesomeIcons.user,
@@ -120,11 +121,14 @@ class _firstPageState extends State<firstPage> {
     final uri = Uri.parse(url);
     final response =
         await http.get(uri, headers: header('${prefs.get('token')}'));
-
-    final result = jsonDecode(response.body);
-    setState(() {
-      reservationPourAjourdhui = result['data'];
-    });
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      setState(() {
+        reservationPourAjourdhui = result['data'];
+      });
+    } else {
+      message(context, '${response.statusCode}', Colors.red);
+    }
   }
 
   List mesreservationsValider = [];
@@ -136,10 +140,14 @@ class _firstPageState extends State<firstPage> {
     final response =
         await http.get(uri, headers: header('${prefs.get('token')}'));
     // print(response.body);
-    final result = jsonDecode(response.body);
-    setState(() {
-      mesreservationsValider = result['data'];
-    });
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      setState(() {
+        mesreservationsValider = result['data'];
+      });
+    } else {
+      message(context, "${response.statusCode}", Colors.red);
+    }
   }
 
   List mesReservationAvenir = [];
@@ -151,25 +159,29 @@ class _firstPageState extends State<firstPage> {
     final response =
         await http.get(uri, headers: header('${prefs.get('token')}'));
     // print(response.body);
-    final result = jsonDecode(response.body);
-    setState(() {
-      mesReservationAvenir = result['data'];
-    });
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      setState(() {
+        mesReservationAvenir = result['data'];
+      });
+    } else {
+      print("error ${response.body}");
+    }
   }
 
   List mesReservationAnnuler = [];
   Future<void> mesReservationsAnnuler() async {
-    final prefs = await SharedPreferences.getInstance();
+    // final prefs = await SharedPreferences.getInstance();
 
-    var url = monurl("reservationAdminExpirer");
-    final uri = Uri.parse(url);
-    final response =
-        await http.get(uri, headers: header('${prefs.get('token')}'));
-    // print(response.body);
-    final result = jsonDecode(response.body);
-    setState(() {
-      mesReservationAnnuler = result['data'];
-    });
+    // var url = monurl("reservationAdminExpirer");
+    // final uri = Uri.parse(url);
+    // final response =
+    //     await http.get(uri, headers: header('${prefs.get('token')}'));
+    // // print(response.body);
+    // final result = jsonDecode(response.body);
+    // setState(() {
+    //   mesReservationAnnuler = result['data'];
+    // });
   }
 
   List reservationTodayof = [];
@@ -183,12 +195,16 @@ class _firstPageState extends State<firstPage> {
     final response =
         await http.get(uri, headers: header('${prefs.getString('token')}'));
 
-    final resultat = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final resultat = jsonDecode(response.body);
 
-    setState(() {
-      reservationTodayof = resultat['data'];
-      isLoading = resultat['status'];
-    });
+      setState(() {
+        reservationTodayof = resultat['data'];
+        isLoading = resultat['status'];
+      });
+    } else {
+      message(context, "Erreur ${response.statusCode}", Colors.red);
+    }
     // print(reservationToday);
   }
 
@@ -268,130 +284,137 @@ class _firstPageState extends State<firstPage> {
                     reservationsencours();
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child:  Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  NewBold('Bienvenue $nom', 15, Colors.white),
-                                  SizedBox(
-                                    height: 5,
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        NewBold(
+                                            'Bienvenue $nom', 15, Colors.white),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        NewText('Operateur', 15, Colors.white),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        NewText('$email', 15, Colors.white),
+                                      ],
+                                    ),
                                   ),
-                                  NewText('Operateur', 15, Colors.white),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  NewText('$email', 15, Colors.white),
-                                ],
-                              ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReservationEnCours()));
+                                      },
+                                      child: cardselection(
+                                          MediaQuery.of(context).size.width,
+                                          Icons.padding,
+                                          "Reservations pour aujourd'hui",
+                                          "${reservationPourAjourdhui.length}",
+                                          Colors.blue,
+                                          15),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    reservationEncourRs()));
+                                      },
+                                      child: cardselection(
+                                          MediaQuery.of(context).size.width,
+                                          Icons.padding,
+                                          "Reservations  En cours...",
+                                          "${reservationTodayof.length}",
+                                          Colors.purple,
+                                          15),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //     Navigator.of(context).push(MaterialPageRoute(
+                                    //         builder: (context) => historique()));
+                                    //   },
+                                    //   child: cardselection(
+                                    //       MediaQuery.of(context).size.width,
+                                    //       Icons.padding,
+                                    //       "Reservations Expirées",
+                                    //       '${mesReservationAnnuler.length}',
+                                    //       Colors.red,
+                                    //       15),
+                                    // ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReservationProchain()));
+                                      },
+                                      child: cardselection(
+                                          MediaQuery.of(context).size.width,
+                                          Icons.padding,
+                                          "Reservations à venir",
+                                          '${mesReservationAvenir.length}',
+                                          Colors.orange,
+                                          15),
+                                    ),
+                                  ],
+                                ),
+                                // Row(
+                                //   children: [
+                                //     GestureDetector(
+                                //       onTap: () {
+                                //         Navigator.of(context).push(MaterialPageRoute(
+                                //             builder: (context) =>
+                                //                 ReservationTraite()));
+                                //       },
+                                //       child: cardselection(
+                                //           MediaQuery.of(context).size.width,
+                                //           Icons.padding,
+                                //           "Reservations traitées",
+                                //           "${mesreservationsValider.length}",
+                                //           Colors.green,
+                                //           15),
+                                //     ),
+                                //   ],
+                                // )
+                              ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          ReservationEnCours()));
-                                },
-                                child: cardselection(
-                                    MediaQuery.of(context).size.width,
-                                    Icons.padding,
-                                    "Reservations pour aujourd'hui",
-                                    "${reservationPourAjourdhui.length}",
-                                    Colors.blue,
-                                    15),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          reservationEncourRs()));
-                                },
-                                child: cardselection(
-                                    MediaQuery.of(context).size.width,
-                                    Icons.padding,
-                                    "Reservations  En cours...",
-                                    "${reservationTodayof.length}",
-                                    Colors.purple,
-                                    15),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // GestureDetector(
-                              //   onTap: () {
-                              //     Navigator.of(context).push(MaterialPageRoute(
-                              //         builder: (context) => historique()));
-                              //   },
-                              //   child: cardselection(
-                              //       MediaQuery.of(context).size.width,
-                              //       Icons.padding,
-                              //       "Reservations Expirées",
-                              //       '${mesReservationAnnuler.length}',
-                              //       Colors.red,
-                              //       15),
-                              // ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          ReservationProchain()));
-                                },
-                                child: cardselection(
-                                    MediaQuery.of(context).size.width,
-                                    Icons.padding,
-                                    "Reservations à venir",
-                                    '${mesReservationAvenir.length}',
-                                    Colors.orange,
-                                    15),
-                              ),
-                            ],
-                          ),
-                          // Row(
-                          //   children: [
-                          //     GestureDetector(
-                          //       onTap: () {
-                          //         Navigator.of(context).push(MaterialPageRoute(
-                          //             builder: (context) =>
-                          //                 ReservationTraite()));
-                          //       },
-                          //       child: cardselection(
-                          //           MediaQuery.of(context).size.width,
-                          //           Icons.padding,
-                          //           "Reservations traitées",
-                          //           "${mesreservationsValider.length}",
-                          //           Colors.green,
-                          //           15),
-                          //     ),
-                          //   ],
-                          // )
+                          )
                         ],
-                      ),
-                        )
-                      ],
-                    )
-                  ),
+                      )),
                 ),
               ),
             );

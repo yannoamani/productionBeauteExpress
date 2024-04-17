@@ -7,10 +7,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestion_salon_coiffure/Page/Admin_Page/reservationAdmin/MesNotes.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/mesReservations/mes_reservation.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/Login_page/Update_users.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/Login_page/login_page.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/coupons/AllCoupons.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/promotion/promotion_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,6 +31,7 @@ class _CompteState extends State<Compte> {
   String token = "";
   int? IdRole = 0;
   int rating = 0;
+  textStyleUtils cutomStyle = textStyleUtils();
   TextEditingController _controlCommentaire = TextEditingController();
 
   Future yanno() async {
@@ -56,21 +59,16 @@ class _CompteState extends State<Compte> {
         await http.post(uri, headers: header('${prefs.getString("token")}'));
     if (response.statusCode == 200) {
       message(context, "Deconnecter avec succès", Colors.green);
-        prefs.remove('token');
-        prefs.remove('name');
-        prefs.remove('prenom');
-        prefs.remove('phone');
-        prefs.remove('email');
-           Navigator
-                                                        .pushAndRemoveUntil(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Login_page()),
-                                                      (route) =>
-                                                          false, // Utilisez cette fonction pour supprimer toutes les pages jusqu'à la nouvelle page
-                                                    );
-                                                  
+      prefs.remove('token');
+      prefs.remove('name');
+      prefs.remove('prenom');
+      prefs.remove('phone');
+      prefs.remove('email');
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Login_page()),
+        (route) => false,
+      );
     } else {
       message(context, "Erreur  rencontré", Colors.red);
     }
@@ -85,10 +83,14 @@ class _CompteState extends State<Compte> {
     final uri = Uri.parse(url);
     final response =
         await http.get(uri, headers: header('${prefs.getString('token')}'));
-    final resultat = jsonDecode(response.body);
-    setState(() {
-      Reservation_A_V = resultat['data'];
-    });
+    if (response.statusCode == 200) {
+      final resultat = jsonDecode(response.body);
+      setState(() {
+        Reservation_A_V = resultat['data'];
+      });
+    } else {
+      message(context, "${response.statusCode}", Colors.red);
+    }
     // print(Reservation_A_V);
   }
 
@@ -224,16 +226,18 @@ class _CompteState extends State<Compte> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
                                   "$nom",
-                                  style: TextStyle(fontWeight: FontWeight.w900),
+                                  style:
+                                      cutomStyle.titreStyle(Colors.black, 18),
                                 ),
                                 Text(
                                   "$email",
-                                  style: TextStyle(fontWeight: FontWeight.w100),
+                                  style:
+                                      cutomStyle.curenttext(Colors.black, 18),
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -241,7 +245,11 @@ class _CompteState extends State<Compte> {
                                 Divider(),
                                 ListTile(
                                   leading: Icon(CupertinoIcons.lock),
-                                  title: Text("Changer mes accès"),
+                                  title: Text(
+                                    "Changer mes accès",
+                                    style:
+                                        cutomStyle.curenttext(Colors.black, 18),
+                                  ),
                                   onTap: () {
                                     Navigator.push(
                                         context,
@@ -265,7 +273,11 @@ class _CompteState extends State<Compte> {
                                             child:
                                                 Icon(CupertinoIcons.calendar),
                                           ),
-                                    title: Text("Mes réservations"),
+                                    title: Text(
+                                      "Mes réservations",
+                                      style: cutomStyle.curenttext(
+                                          Colors.black, 18),
+                                    ),
                                     onTap: () {
                                       Navigator.push(
                                           context,
@@ -289,7 +301,11 @@ class _CompteState extends State<Compte> {
                                             label: Text("${mesCoupons.length}"),
                                             child: Icon(CupertinoIcons.ticket),
                                           ),
-                                    title: Text("Mes Coupons"),
+                                    title: Text(
+                                      "Mes Coupons",
+                                      style: cutomStyle.curenttext(
+                                          Colors.black, 18),
+                                    ),
                                     onTap: () {
                                       Navigator.push(
                                           context,
@@ -303,7 +319,11 @@ class _CompteState extends State<Compte> {
                                 if (IdRole == 3)
                                   ListTile(
                                     leading: Icon(CupertinoIcons.star),
-                                    title: Text("Mes notes"),
+                                    title: Text(
+                                      "Mes notes",
+                                      style: cutomStyle.curenttext(
+                                          Colors.black, 18),
+                                    ),
                                     onTap: () {
                                       // Navigator.push(
                                       //     context,
@@ -324,7 +344,11 @@ class _CompteState extends State<Compte> {
                                 ListTile(
                                   leading:
                                       FaIcon(CupertinoIcons.question_circle),
-                                  title: Text("Help & Support"),
+                                  title: Text(
+                                    "Help & Support",
+                                    style:
+                                        cutomStyle.curenttext(Colors.black, 18),
+                                  ),
                                   trailing:
                                       FaIcon(CupertinoIcons.arrow_right_square),
                                 ),
@@ -356,15 +380,11 @@ class _CompteState extends State<Compte> {
                                             CupertinoDialogAction(
                                               isDefaultAction: true,
                                               onPressed: () {
-                                                Navigator.of(context).pop();  
+                                                Navigator.of(context).pop();
                                               },
                                               child: TextButton(
                                                   onPressed: () async {
-                                                      Logout();
-                                                   
-                                                  
-                                                  
-                                                 
+                                                    Logout();
                                                   },
                                                   child: Text("Oui")),
                                             ),
@@ -374,7 +394,11 @@ class _CompteState extends State<Compte> {
                                     );
                                   },
                                   leading: FaIcon(CupertinoIcons.power),
-                                  title: Text("Deconnexion"),
+                                  title: Text(
+                                    "Deconnexion",
+                                    style:
+                                        cutomStyle.curenttext(Colors.black, 18),
+                                  ),
                                   trailing:
                                       FaIcon(CupertinoIcons.arrow_right_square),
                                 ),

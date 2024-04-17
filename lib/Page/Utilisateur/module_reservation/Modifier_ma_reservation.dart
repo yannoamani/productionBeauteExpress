@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestion_salon_coiffure/Page/Admin_Page/reservationAdmin/retour.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/mesReservations/Congratulations/congratulations.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/module_reservation/reservation_controller.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/module_reservation/reservation_provider.dart';
@@ -33,7 +35,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
   String heure = '';
   bool verif = false;
   bool loading = false;
-   int monprix = 2;
+  int monprix = 0;
   TextEditingController _ControlCoupon = TextEditingController();
   // Lister les differents services de l'entreprise
   List Photos = [];
@@ -82,7 +84,15 @@ class _ModifierReservationState extends State<ModifierReservation> {
         TrueTimeDate.add(dateInfo);
       });
     }
-    print(response.body);
+    for (var element in mespromotions) {
+      var prix = int.parse(element['cost']);
+      setState(() {
+        monprix += prix;
+      });
+    }
+    print(monprix);
+
+    // print(response.body);
   }
 
   int somme = -1;
@@ -115,7 +125,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
     }
   }
 
-   Future<dynamic> reserver() async {
+  Future<dynamic> reserver() async {
     try {
       final prefs = await SharedPreferences.getInstance();
 
@@ -149,7 +159,6 @@ class _ModifierReservationState extends State<ModifierReservation> {
     }
     print('Je marche');
   }
-
 
   // verificationReservation
   late bool char = false;
@@ -198,7 +207,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
         DateTime convert = DateTime.parse(today.toString().split(" ")[0]);
         String Madate = DateFormat.yMMMMEEEEd('fr_FT').format(convert);
         if (char == false) {
-         showModalBottomSheet(
+          showModalBottomSheet(
               // isDismissible: false,
               isScrollControlled: true,
               context: context,
@@ -215,17 +224,18 @@ class _ModifierReservationState extends State<ModifierReservation> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Titre(
-                                  "${somme == -1 ? mespromotions.isEmpty ? Liste_Service['tarif'] : double.parse(Liste_Service['tarif']) - monprix : somme} FCFA",
-                                  15,
-                                  Colors.black),
+                              Mytext(
+                                "${mespromotions.isEmpty ? (somme == -1 ? Liste_Service['tarif'] : somme) : (double.parse(Liste_Service['tarif']) - monprix)}Fcfa",
+                                15,
+                                Colors.black,
+                              ),
                               Container(
                                 width:
                                     MediaQuery.of(context).size.width / 2 - 20,
                                 child: Text(
                                   "${Liste_Service['libelle']} ",
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.andadaPro(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 15,
                                   ),
                                 ),
@@ -238,17 +248,8 @@ class _ModifierReservationState extends State<ModifierReservation> {
                           ),
                           Spacer(),
                           ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.blue),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.zero,
-                                  ),
-                                ),
-                              ),
+                              style: textStyleUtils().primarybutton(
+                                  textStyleUtils().getPrimaryColor()),
                               onPressed: () {
                                 reserver();
 
@@ -284,7 +285,9 @@ class _ModifierReservationState extends State<ModifierReservation> {
                             const SizedBox(
                               height: 10,
                             ),
-                            Center(child: Titre('Verifiez et confirmez ', 20, Colors.black)),
+                            Center(
+                                child: Titre(
+                                    'Verifiez et modifiez ', 20, Colors.black)),
 
                             const SizedBox(
                               height: 20,
@@ -413,7 +416,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
                                 NewBold("Total", 15, Colors.black),
                                 Spacer(),
                                 Titre(
-                                    "${somme == -1 ? mespromotions.isEmpty ? Liste_Service['tarif'] : double.parse(Liste_Service['tarif']) - monprix : somme} FCFA",
+                                    "${mespromotions.isEmpty ? (somme == -1 ? Liste_Service['tarif'] : somme) : (double.parse(Liste_Service['tarif']) - monprix)} FCFA",
                                     15,
                                     Colors.black),
                               ],
@@ -436,7 +439,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
                                 NewBold("Payer sur place", 15, Colors.black),
                                 Spacer(),
                                 NewBold(
-                                    "${somme == -1 ? mespromotions.isEmpty ? Liste_Service['tarif'] : double.parse(Liste_Service['tarif']) - monprix : somme}FCFA",
+                                    "${mespromotions.isEmpty ? (somme == -1 ? Liste_Service['tarif'] : somme) : (double.parse(Liste_Service['tarif']) - monprix)}FCFA",
                                     15,
                                     Colors.black),
                               ],
@@ -477,7 +480,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
                                   width: 20,
                                 ),
                                 Center(
-                                    child: NewBold(
+                                    child: NewText(
                                         "Payer sur place", 15, Colors.black)),
                               ],
                             ),
@@ -495,7 +498,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
                               height: 5,
                             ),
                             Mytext(
-                                "Cher(e) client(e), veuillez noter notre politique d'annulation : Annulation gratuite jusqu'à 3 jours avant la date de réservation. Après cette période, des frais peuvent s'appliquer.",
+                                "Cher(e) client(e), veuillez noter que toute annulation doit être effectuée au moins 3 heures avant l'heure prévue de votre réservation. Pour toute assistance, n'hésitez pas à nous contacter.",
                                 15,
                                 Colors.black),
 
@@ -512,61 +515,66 @@ class _ModifierReservationState extends State<ModifierReservation> {
                             SizedBox(
                               height: 10,
                             ),
+                            // if (mespromotions.isEmpty)
                             if (mespromotions.isEmpty)
-                              if (mespromotions.isEmpty)
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      // height: 40,
-                                      width:
-                                          MediaQuery.of(context).size.width / 2,
-                                      child: TextField(
-                                        controller: _ControlCoupon,
-                                        decoration: const InputDecoration(
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.blue)),
-                                          filled: true,
-                                          fillColor: Color.fromARGB(
-                                              255, 218, 232, 244),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.grey)),
-                                          label: Text(
-                                            "Code du coupon",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
+                              Column(
+                                children: [
+                                  Container(
+                                    // height: 40,
+
+                                    child: TextField(
+                                      style: textStyleUtils()
+                                          .titreStyle(Colors.red, 20),
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(6)
+                                      ],
+                                      controller: _ControlCoupon,
+                                      decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.blue)),
+                                        filled: true,
+                                        fillColor:
+                                            Color.fromARGB(255, 218, 232, 244),
+                                        border: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.grey)),
+                                        label: Text(
+                                          "Code du coupon",
+                                          style: textStyleUtils()
+                                              .curenttext(Colors.black, 20),
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      height: 40,
-                                      child: ElevatedButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                      Color>(Colors.red),
-                                              shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              )),
-                                          onPressed: () {
-                                            validerCoupons()
-                                                .then((value) => setState(() {
-                                                      somme = value;
-                                                    }));
-                                          },
-                                          child: NewText(
-                                              'Appliquer', 15, Colors.white)),
-                                    )
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 40,
+                                    child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(Colors.red),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            )),
+                                        onPressed: () {
+                                          validerCoupons()
+                                              .then((value) => setState(() {
+                                                    somme = value;
+                                                  }));
+                                        },
+                                        child: NewText(
+                                            'Appliquer', 15, Colors.white)),
+                                  ),
+                                ],
+                              ),
 
                             SizedBox(height: 10)
 
@@ -757,9 +765,9 @@ class _ModifierReservationState extends State<ModifierReservation> {
   DateTime today = DateTime.now();
   @override
   void initState() {
-    Attendre();
+    // Attendre();
     getServices();
-    Mes_Services();
+    // Mes_Services();
     // GetReservation();
     super.initState();
   }
@@ -805,13 +813,12 @@ class _ModifierReservationState extends State<ModifierReservation> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                     ListTile(
+                      ListTile(
                         leading: CircleAvatar(
                           radius: 30,
                           child: ClipOval(
                             child: Image.network(
-                              ImgDB(
-                                  "${Liste_Service['photos'][0]['path']}"),
+                              ImgDB("${Liste_Service['photos'][0]['path']}"),
                               fit: BoxFit.cover,
                               height: double.infinity,
                               width: double.infinity,
@@ -819,7 +826,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
                             ),
                           ),
                         ),
-                        title: NewBold(
+                        title: NewText(
                             "${Liste_Service['libelle']}", 15, Colors.black),
                       ),
 
@@ -837,12 +844,22 @@ class _ModifierReservationState extends State<ModifierReservation> {
                           locale: 'fr_FR',
                           rowHeight: 43,
                           focusedDay: today,
+                          daysOfWeekHeight: 20,
                           firstDay: DateTime.now(),
                           lastDay: DateTime.utc(2024, 12, 31),
                           startingDayOfWeek: StartingDayOfWeek.monday,
-                          headerStyle: const HeaderStyle(
-                              formatButtonVisible: false, titleCentered: true),
+                          headerStyle: HeaderStyle(
+                              titleTextStyle:
+                                  textStyleUtils().titreStyle(Colors.black, 20),
+                              formatButtonVisible: false,
+                              titleCentered: true),
                           availableGestures: AvailableGestures.all,
+                          daysOfWeekStyle: DaysOfWeekStyle(
+                            weekdayStyle:
+                                textStyleUtils().curenttext(Colors.black, 17),
+                            weekendStyle: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
                           onDaySelected: (selectedDay, focusedDay) async {
                             setState(() {
                               today = selectedDay;
@@ -952,7 +969,7 @@ class _ModifierReservationState extends State<ModifierReservation> {
                                       // ),
                                       title: Text(
                                         "${i.toString().padLeft(2, "0")}:${j.toString().padLeft(2, "0")}",
-                                        style: GoogleFonts.openSans(
+                                        style: GoogleFonts.poppins(
                                             color: Colors.black, fontSize: 20),
                                         textAlign: TextAlign.start,
                                       ),
@@ -1114,4 +1131,3 @@ class _ModifierReservationState extends State<ModifierReservation> {
         });
   }
 }
-

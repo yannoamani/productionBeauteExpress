@@ -2,9 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestion_salon_coiffure/Page/Admin_Page/reservationAdmin/retour.dart';
+import 'package:gestion_salon_coiffure/Widget/textRich.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 
-Future showmodalMesreservations(BuildContext,context, String photos, String libelle,String date, String heure, String duree,String montant, String id, String statut) {
+Future showmodalMesreservations(
+    BuildContext,
+    context,
+    String photos,
+    String libelle,
+    String date,
+    String heure,
+    String duree,
+    String montant,
+    String id,
+    String statut) {
   return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -39,8 +50,10 @@ Future showmodalMesreservations(BuildContext,context, String photos, String libe
                         ),
                         Align(
                             alignment: Alignment.bottomLeft,
-                            child: NewBold("${libelle} ",
-                                25, Colors.white))
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: NewBold("${libelle} ", 25, Colors.white),
+                            ))
                       ],
                     )),
                   ),
@@ -61,26 +74,16 @@ Future showmodalMesreservations(BuildContext,context, String photos, String libe
                                 borderRadius: BorderRadius.circular(10)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  FaIcon(CupertinoIcons.back,
-                                      color: Colors.white),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Mytext("$statut", 20, Colors.white),
-                                ],
-                              ),
+                              child: Mytext("$statut", 20, Colors.white),
                             ),
                           ),
                           SizedBox(
                             height: 15,
                           ),
-                          Titre(
-                              "$date à ${heure}", 18, Colors.black),
+                          NewText("$date à ${heure}", 18, Colors.black),
 
-                          Mytext("Durée:${duree}h", 15,
-                              const Color.fromARGB(255, 78, 77, 77)),
+                          NewText(
+                              "Durée du service :${duree}h", 15, Colors.black),
                           SizedBox(
                             height: 30,
                           ),
@@ -88,38 +91,25 @@ Future showmodalMesreservations(BuildContext,context, String photos, String libe
                           SizedBox(
                             height: 10,
                           ),
-                          Center(
-                            child: NewBold("Recapitulatif", 20, Colors.black),
-                          ),
+                          Mytext("Recapitulatif", 20, Colors.black),
+
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
-                          Titre('Montant', 15, Colors.black),
+                          Mytext('Montant : ', 15, Colors.black),
                           SizedBox(
                             height: 10,
                           ),
                           Titre('${montant} F CFA', 18, Colors.black),
-                          // Row(
-                          //   children: [
 
-                          //     Spacer(),
-
-                          //   ],
-                          // ),
                           Divider(),
                           SizedBox(
                             height: 10,
                           ),
                           Center(
-                            child: Text.rich(TextSpan(
-                                text: "Réf de la reservavtion ",
-                                children: [
-                                  TextSpan(
-                                      text: "$id",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18))
-                                ])),
+                            child: textRich(
+                                titre: "réf de la réservation : ",
+                                soustitre: "$id"),
                           )
                         ],
                       ),

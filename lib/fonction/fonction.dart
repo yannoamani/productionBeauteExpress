@@ -799,7 +799,7 @@ Widget ListeTiles(String indice, IconData icon) {
 Widget Mytext(String montexte, double Size, Color couleur) {
   return Text(
     montexte,
-    style: GoogleFonts.andadaPro(
+    style: GoogleFonts.poppins(
       fontSize: Size,
       color: couleur,
     ),
@@ -810,7 +810,7 @@ Widget Mytext(String montexte, double Size, Color couleur) {
 Widget NewText(String montexte, double Size, Color couleur) {
   return Text(
     montexte,
-    style: GoogleFonts.andadaPro(
+    style: GoogleFonts.poppins(
       fontSize: Size,
       color: couleur,
     ),
@@ -820,7 +820,7 @@ Widget NewText(String montexte, double Size, Color couleur) {
 Widget NewBold(String montexte, double Size, Color couleur) {
   return Text(
     montexte,
-    style: GoogleFonts.andadaPro(
+    style: GoogleFonts.poppins(
         fontSize: Size, color: couleur, fontWeight: FontWeight.bold),
     // textAlign: TextAlign.center,
   );
@@ -829,7 +829,7 @@ Widget NewBold(String montexte, double Size, Color couleur) {
 Widget Titre(String montexte, double Size, Color couleur) {
   return Text(
     montexte,
-    style: GoogleFonts.andadaPro(
+    style: GoogleFonts.poppins(
         fontSize: Size, color: couleur, fontWeight: FontWeight.bold),
     textAlign: TextAlign.center,
   );
@@ -853,25 +853,23 @@ Widget VraiInput(
     controller: _controll,
     validator: (value) => value!.isEmpty ? 'Remplissez correctement ' : null,
     decoration: InputDecoration(
-      alignLabelWithHint: true,
-      hintText: '$Libelle',
-      hintStyle: GoogleFonts.andadaPro(
-        fontSize: 20,
-        color: Color.fromARGB(255, 86, 86, 86),
-      ),
-       border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                     borderRadius: BorderRadius.circular(10),
-                                    ),
-                                focusedBorder: OutlineInputBorder(
-                                   
-                                    borderSide:
-                                        BorderSide(color: const Color.fromARGB(255, 234, 210, 2), width: 2),
-                                        borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        prefixIcon: Icon(moniocn)
-                                // prefixIcon: FaIcon(
-    ),
+        alignLabelWithHint: true,
+        hintText: '$Libelle',
+        hintStyle: GoogleFonts.andadaPro(
+          fontSize: 20,
+          color: Color.fromARGB(255, 86, 86, 86),
+        ),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: const Color.fromARGB(255, 234, 210, 2), width: 2),
+            borderRadius: BorderRadius.circular(10)),
+        prefixIcon: Icon(moniocn)
+        // prefixIcon: FaIcon(
+        ),
   );
 }
 
@@ -899,7 +897,7 @@ Card cardselection(double large, IconData icon, String texte, String indice,
             Text(
               texte,
               textAlign: TextAlign.center,
-              style: GoogleFonts.andadaPro(
+              style: GoogleFonts.poppins(
                 color: Colors.black,
                 fontSize: 15,
               ),
@@ -991,23 +989,19 @@ cardreservations(
 Widget circlecard(IconData icon) {
   return CircleAvatar(
     backgroundColor: Colors.white,
-  
-  radius: 20,
+    radius: 20,
     child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: FaIcon(
         icon,
-        
         color: Colors.grey,
-      
-        
       ),
     ),
   );
 }
 
 Widget circlevalidate(IconData icon) {
-  return  CircleAvatar(
+  return CircleAvatar(
     backgroundColor: Colors.white,
     radius: 20,
     child: Padding(
@@ -1021,7 +1015,7 @@ Widget circlevalidate(IconData icon) {
 }
 
 Widget circlefailed(IconData icon) {
-  return  CircleAvatar(
+  return CircleAvatar(
     backgroundColor: Colors.white,
     radius: 20,
     child: Padding(
@@ -1070,7 +1064,7 @@ Widget mesreservations(String texte) {
           SizedBox(height: 5),
           Container(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.red,
               borderRadius: BorderRadius.circular(5),
             ),
             child: Padding(

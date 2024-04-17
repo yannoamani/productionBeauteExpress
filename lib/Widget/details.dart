@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
 import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/module_reservation/Passer_Une_Reservation.dart';
@@ -118,6 +119,7 @@ class _MesdetailsState extends State<Mesdetails> {
 
   @override
   Widget build(BuildContext context) {
+    textStyleUtils customStyle = textStyleUtils();
     return FutureBuilder(
       future: getdata(),
       builder: (context, snapshot) {
@@ -130,9 +132,8 @@ class _MesdetailsState extends State<Mesdetails> {
         } else {
           return Scaffold(
               bottomNavigationBar: BottomAppBar(
-                  child: boutton(
-                      context, false, Colors.blue, "RESERVER DES MAINTENANT",
-                      () {
+                  child: boutton(context, false, customStyle.getPrimaryColor(),
+                      "Faire une réservation", () {
                 // get_info_service();
                 Navigator.of(context)
                     .push(CupertinoPageRoute(builder: (context) {
@@ -147,7 +148,7 @@ class _MesdetailsState extends State<Mesdetails> {
                         leadingWidth: 20,
 
                         centerTitle: true,
-                        title: NewBold("${widget.serviceData['libelle']}", 15,
+                        title: Mytext("${widget.serviceData['libelle']}", 15,
                             Colors.black),
 
                         pinned: true,
@@ -191,40 +192,12 @@ class _MesdetailsState extends State<Mesdetails> {
                                             MediaQuery.of(context).size.width,
                                         child: InstaImageViewer(
                                           child: Image(
-                                            image: Image.network(imagePath,
-                                                    fit: BoxFit.cover,
-                                                    width: double.infinity,
-                                                    height: double.infinity,
-                                                    loadingBuilder: (BuildContext
-                                                            context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-
-                                                               if (loadingProgress == null) {
-              setState(() {
-                _isLoading = false;
-              });
-              return child;
-            } else {
-              setState(() {
-                _isLoading = true;
-              });
-              return CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                    : null,
-              );
-            }
-          
-                                                            },
-                                                             errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-            return Text('Impossible de charger l\'image');
-          },
-
-                             
-                                                            )
-                                                .image,
+                                            image: Image.network(
+                                              imagePath,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                            ).image,
                                           ),
                                         )),
                                   );
@@ -252,10 +225,8 @@ class _MesdetailsState extends State<Mesdetails> {
                                       "${widget.serviceData['libelle']}",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w900),
+                                      style: customStyle.curenttext(
+                                          Colors.black, 20),
                                     ),
                                     const SizedBox(
                                       height: 5,
@@ -277,7 +248,8 @@ class _MesdetailsState extends State<Mesdetails> {
                                               ),
                                               Container(
                                                 decoration: BoxDecoration(
-                                                    color: Colors.blue,
+                                                    color: customStyle
+                                                        .getPrimaryColor(),
                                                     border: Border.all(
                                                         color:
                                                             Colors.transparent),
@@ -307,8 +279,8 @@ class _MesdetailsState extends State<Mesdetails> {
                                           TextSpan(
                                               text:
                                                   '${widget.serviceData['duree']}h',
-                                              style: GoogleFonts.openSans(
-                                                  fontWeight: FontWeight.w700))
+                                              style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.bold))
                                         ])),
                                     const SizedBox(
                                       height: 5,
@@ -333,7 +305,7 @@ class _MesdetailsState extends State<Mesdetails> {
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Mytext(
+                                          Titre(
                                               "(${widget.serviceData['moyenne_Services']})",
                                               15,
                                               Colors.black)
@@ -347,51 +319,67 @@ class _MesdetailsState extends State<Mesdetails> {
                             SizedBox(
                               height: 5,
                             ),
-                            Container(
-                              width: double.infinity,
-                              color: Colors.grey[100],
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("DESCRIPTION",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold)),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      if (voirplus == false)
-                                        Container(
-                                          child: Text(
-                                            "${widget.serviceData["description"]}",
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style:
-                                                TextStyle(color: Colors.black),
+                            if (widget.serviceData["description"] != null)
+                              Container(
+                                width: double.infinity,
+                                color: Colors.grey[100],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Description",
+                                            textAlign: TextAlign.justify,
+                                            style: customStyle.titreStyle(
+                                                Colors.black, 20)),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        if (voirplus == false)
+                                          Container(
+                                            child: Text(
+                                              "${widget.serviceData["description"]}",
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: customStyle.curenttext(
+                                                  Colors.black, 15),
+                                            ),
                                           ),
-                                        ),
-                                      if (voirplus == true)
-                                        Text(
-                                          "${widget.serviceData["description"]}",
+                                        if (voirplus == true)
+                                          Text(
+                                            "${widget.serviceData["description"]}",
+                                            textScaleFactor: 1.2,
 
-                                          // overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              voirplus = !voirplus;
-                                            });
-                                          },
-                                          child: Text(
-                                              "${voirplus == false ? "Voir plus" : 'Voir moins'}"))
-                                    ]),
+                                            // overflow: TextOverflow.ellipsis,
+                                            style: customStyle.curenttext(
+                                                Colors.black, 15),
+                                          ),
+                                        TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                voirplus = !voirplus;
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: customStyle
+                                                      .getPrimaryColor()),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "${voirplus == false ? "Voir plus ..." : 'Voir moins'}",
+                                                  style: customStyle.curenttext(
+                                                      Colors.white, 15),
+                                                ),
+                                              ),
+                                            ))
+                                      ]),
+                                ),
                               ),
-                            ),
                             SizedBox(
                               height: 5,
                             ),
@@ -404,7 +392,7 @@ class _MesdetailsState extends State<Mesdetails> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Titre("Avis", 25, Colors.black),
+                                      Titre("Avis", 20, Colors.black),
                                       const SizedBox(
                                         height: 10,
                                       ),

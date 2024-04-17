@@ -90,15 +90,15 @@ class cardRecherche extends StatelessWidget {
                     // width: 200,
                     child: Text(
                       "${libelle}",
-                      style: GoogleFonts.andadaPro(
-                          fontSize: 18, fontWeight: FontWeight.w900),
+                      style: GoogleFonts.poppins(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     )),
                 Container(
                   child: Text(
                     '${prix} FCFA',
-                    style: GoogleFonts.andadaPro(fontSize: 18),
+                    style: GoogleFonts.poppins(fontSize: 18),
                   ),
                 ),
                 SizedBox(
@@ -106,7 +106,7 @@ class cardRecherche extends StatelessWidget {
                 ),
                 Text(
                   "${description}",
-                  style: GoogleFonts.andadaPro(
+                  style: GoogleFonts.poppins(
                       fontSize: 12,
                       color: Colors.grey,
                       fontWeight: FontWeight.normal),
@@ -119,7 +119,7 @@ class cardRecherche extends StatelessWidget {
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
+                            MaterialStateProperty.all<Color>(Color(0xFFAE8F29)),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -127,7 +127,7 @@ class cardRecherche extends StatelessWidget {
                           ),
                         )),
                     onPressed:onTap,
-                    child: texte("Voir plus"))
+                    child: NewText("Voir plus",15,Colors.white))
               ],
             ),
           ),

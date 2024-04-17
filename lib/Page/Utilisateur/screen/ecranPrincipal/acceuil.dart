@@ -7,7 +7,6 @@ import 'package:badges/badges.dart' as badges;
 import 'package:gestion_salon_coiffure/Page/Utilisateur/promotion/promotion_page.dart';
 import 'package:gestion_salon_coiffure/Page/Utilisateur/promotion/promotion_provider.dart';
 
-
 import 'first_page.dart';
 
 class acceuil extends StatefulWidget {
@@ -18,6 +17,7 @@ class acceuil extends StatefulWidget {
 }
 
 class _acceuilState extends State<acceuil> {
+  Color jauneMoutarde = Color(0xFFAE8F29);
   List mespromotions = [];
   int nombre = 0;
   Promotion_provider promotionProvider = Promotion_provider();
@@ -50,24 +50,24 @@ class _acceuilState extends State<acceuil> {
             nombre = 0;
           }
         },
-        indicatorColor: Colors.transparent,
+        indicatorColor: Colors.grey[100],
         surfaceTintColor: Colors.transparent,
         selectedIndex: _currentindex,
         elevation: 0,
         backgroundColor: Colors.grey[100],
         destinations: [
-          const NavigationDestination(
+          NavigationDestination(
             selectedIcon: Icon(
               CupertinoIcons.home,
-              color: Colors.blue,
+              color: jauneMoutarde,
             ),
             icon: Icon(CupertinoIcons.home),
             label: 'Home',
           ),
-          const NavigationDestination(
+          NavigationDestination(
             selectedIcon: Icon(
               CupertinoIcons.search,
-              color: Colors.blue,
+              color: jauneMoutarde,
             ),
             icon: Icon(
               CupertinoIcons.search,
@@ -81,12 +81,13 @@ class _acceuilState extends State<acceuil> {
             child: NavigationDestination(
               selectedIcon: Icon(
                 CupertinoIcons.bell,
-                color: Colors.blue,
+                color: jauneMoutarde,
               ),
               icon: nombre > 0
                   ? badges.Badge(
                       badgeStyle: badges.BadgeStyle(badgeColor: Colors.red),
-                      badgeContent: Text("${_currentindex==2?nombre=0:nombre}"),
+                      badgeContent:
+                          Text("${_currentindex == 2 ? nombre = 0 : nombre}"),
                       child: InkWell(
                           onTap: () {
                             getPromotion();
@@ -98,15 +99,15 @@ class _acceuilState extends State<acceuil> {
                           )),
                     )
                   : Icon(
-                    CupertinoIcons.bell,
-                  ),
+                      CupertinoIcons.bell,
+                    ),
               label: 'Notifications',
             ),
           ),
           NavigationDestination(
             selectedIcon: Icon(
               CupertinoIcons.person_alt_circle,
-              color: Colors.blue,
+              color: jauneMoutarde,
             ),
             icon: Icon(CupertinoIcons.person_alt_circle),
             label: 'Compte ',

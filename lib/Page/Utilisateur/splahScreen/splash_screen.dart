@@ -58,10 +58,13 @@ class _splash_screenState extends State<splash_screen> {
             //  Text("Les Coulés",style: TextStyle(color: Colors.white,fontSize: 20),),
             Center(
               child: Container(
-               height: 100,
-                width: 100,
+              //  height: 100,
+              //   width: 100,
                 color: Colors.transparent,
-                child: Image.asset('assets/massage.png',fit: BoxFit.cover,),
+                child: Image.asset('assets/7113708.jpg',
+                fit: BoxFit.cover,
+                height: 200,
+                ),
               ),
             ),
             SizedBox(height: 10,),

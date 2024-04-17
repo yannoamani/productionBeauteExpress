@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gestion_salon_coiffure/Utils/utils.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +18,6 @@ class _detailsState extends State<details> {
   bool charg = false;
   bool charg1 = false;
 
- 
   TextEditingController nom = TextEditingController();
   TextEditingController prenom = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -27,6 +27,7 @@ class _detailsState extends State<details> {
   TextEditingController phone = TextEditingController();
   TextEditingController password = TextEditingController();
   var mynom;
+  textStyleUtils customStyle = textStyleUtils();
   Future getinfo() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -58,6 +59,8 @@ class _detailsState extends State<details> {
       final prefs = await SharedPreferences.getInstance();
       setState(() {
         prefs.setString('name', decode['user']['nom']);
+        prefs.setString('prenom', decode['user']['prenom']);
+        prefs.setString('email', decode['user']['email']);
       });
       email.clear();
       nom.clear();
@@ -86,10 +89,16 @@ class _detailsState extends State<details> {
     print(response.body);
     final result = jsonDecode(response.body);
     if (result['status']) {
+      setState(() {
+        charg1 = false;
+      });
       message(context, result['message'], Colors.green);
       Navigator.pop(context);
     } else {
       message(context, "${result['message']} ressayer", Colors.red);
+      setState(() {
+        charg1 = false;
+      });
     }
     email.clear();
     Ancienpassword.clear();
@@ -106,123 +115,123 @@ class _detailsState extends State<details> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+        appBar: AppBar(),
         body: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-        child: Column(
-          children: [
-            Container(
-                                  height: 80,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.black, width: 2),
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: ClipOval(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.asset(
-                                        "assets/pngwing.com.png",
-                                        height: 50,
-                                        width: 50,
-                                        fit: BoxFit
-                                            .cover, // Pour que l'image s'adapte à l'intérieur du cercle
-                                      ),
-                                    ),
-                                  ),
-                                ),
-           
-            //  Container(
-            //     height: 150,
-            //     // width: dou,
-            //     child: const Center(
-            //         child: CircularBadgeAvatar(
-            //           iconPosition: 100,
-            //       circleBgColor: Colors.orangeAccent,
-            //       icon: FontAwesomeIcons.edit,
-            //       iconSize: 30,
-            //     ))),
-           const  SizedBox(
-              height: 25,
-            ),
-            Form(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            child: Column(
               children: [
-               Center(child: Titre("Profile", 25, Colors.black)),
+                Container(
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 2),
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipOval(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        "assets/pngwing.com.png",
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit
+                            .cover, // Pour que l'image s'adapte à l'intérieur du cercle
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(
-                  height: 10,
-                ),
-                Divider(color: Colors.black,),
-                SizedBox(height: 15,),
-               VraiInput(nom, "Nom", CupertinoIcons.person),
-                const SizedBox(
-                  height: 30,
-                ),
-                   VraiInput(prenom, "Prenom", CupertinoIcons.person),
-                const SizedBox(
-                  height: 30,
-                ),
-                 VraiInput(email, "Email", CupertinoIcons.envelope),
-               
-                const SizedBox(
-                  height: 30,
-                ),
-                VraiInput(phone, 'Phone', CupertinoIcons.phone),
-             
-                
-             const    SizedBox(
-                  height: 30,
-                ),
-                
-                boutton(context, charg, Colors.blue, "MODIFIER", () {
-                  setState(() {
-                    charg = !charg;
-                  });
-                  getinfo();
-                  update();
-                }),
-                 const    SizedBox(
-                  height: 30,
-                ),
-                const Divider(height: 1,color: Colors.black,),
-                   const    SizedBox(
-                  height: 30,
-                ),
-                 Center(
-                   child: Text(
-                    "MODIFIER LE MOT DE PASSE",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.andadaPro(fontSize: 20, fontWeight: FontWeight.bold),
-                                   ),
-                 ),
-              const   SizedBox(
-                  height: 30,
-                ),
-                VraiInput(emailPassword,'Email', CupertinoIcons.envelope),
-                SizedBox(
-                  height: 20,
-                ),
-                VraiInput(Ancienpassword, "Ancien mot de passe",CupertinoIcons.lock),
-                SizedBox(
-                  height: 20,
-                ),
-               VraiInput(Newpassword,"Nouveau Mot de passe",CupertinoIcons.lock),
-                SizedBox(
                   height: 25,
                 ),
-                boutton(context, charg1, Colors.blue, " MODIFIER", () {
-                  Modifier_Password();
-                })
+                Form(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(child: NewText("Mon profil", 30, Colors.black)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    VraiInput(nom, "Nom", CupertinoIcons.person),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    VraiInput(prenom, "Prenom", CupertinoIcons.person),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    VraiInput(email, "Email", CupertinoIcons.envelope),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    VraiInput(phone, 'Phone', CupertinoIcons.phone),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    boutton(context, charg, customStyle.getPrimaryColor(),
+                        "MODIFIER", () {
+                      setState(() {
+                        charg = true;
+                      });
+                      getinfo();
+                      update();
+                    }),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    const Divider(
+                      height: 1,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Center(
+                      child: Text(
+                        "MODIFIER LE MOT DE PASSE",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.andadaPro(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    VraiInput(emailPassword, 'Email', CupertinoIcons.envelope),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    VraiInput(Ancienpassword, "Ancien mot de passe",
+                        CupertinoIcons.lock),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    VraiInput(Newpassword, "Nouveau Mot de passe",
+                        CupertinoIcons.lock),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    boutton(context, charg1, customStyle.getPrimaryColor(), " Modifier ", () {
+                      setState(() {
+                        charg1 = true;
+                      });
+                      Modifier_Password();
+                    })
+                  ],
+                )),
+                SizedBox(
+                  height: 30,
+                )
               ],
-            )),
-            SizedBox(height: 30,)
-          ],
-        ),
-      ),
-    ));
+            ),
+          ),
+        ));
   }
 }

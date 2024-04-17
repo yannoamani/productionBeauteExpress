@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,6 +43,7 @@ class _prise_rdvState extends State<prise_rdv> {
   TextEditingController _ControlCoupon = TextEditingController();
   // Lister les differents services de l'entreprise
   List Photos = [];
+  textStyleUtils customStyle = textStyleUtils();
 
   Future<void> Mes_Services() async {
     reserv.value.getServices().then((value) {
@@ -147,7 +150,7 @@ class _prise_rdvState extends State<prise_rdv> {
             'user_id': prefs.getInt('id'),
             'heure': heure,
             'date': '${today.toString().split(" ")[0]}',
-            'coupon': _ControlCoupon.text
+            'code': _ControlCoupon.text
           }),
           headers: header("${prefs.getString('token')}"));
       print("je suis${response.body} " + "${response.statusCode}");
@@ -158,9 +161,11 @@ class _prise_rdvState extends State<prise_rdv> {
         if (resultat['status']) {
           // message(context, "En cours de traitement", Colors.blue);
           prefs.setInt('id_reservation', resultat['data']['id']);
-          Navigator.pushReplacement(
+
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Congratulation()),
+            (route) => false,
           );
         } else {
           message(context, '${resultat['message']}', Colors.red);
@@ -266,17 +271,8 @@ class _prise_rdvState extends State<prise_rdv> {
                           ),
                           Spacer(),
                           ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.blue),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.zero,
-                                  ),
-                                ),
-                              ),
+                              style: customStyle
+                                  .primarybutton(customStyle.getPrimaryColor()),
                               onPressed: () {
                                 reserver();
 
@@ -292,7 +288,7 @@ class _prise_rdvState extends State<prise_rdv> {
                                     });
                               },
                               child:
-                                  Mytext("${'Confirmer'}  ", 15, Colors.white))
+                                  Mytext("${'Confirmer'}  ", 18, Colors.white))
                         ],
                       ),
                     ),
@@ -341,6 +337,7 @@ class _prise_rdvState extends State<prise_rdv> {
                                     "${Liste_Service['libelle']}",
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
+                                    style: GoogleFonts.poppins(),
                                   )),
                                   Container(
                                     child: Row(
@@ -507,7 +504,7 @@ class _prise_rdvState extends State<prise_rdv> {
                                   width: 20,
                                 ),
                                 Center(
-                                    child: NewBold(
+                                    child: Mytext(
                                         "Payer sur place", 15, Colors.black)),
                               ],
                             ),
@@ -544,57 +541,53 @@ class _prise_rdvState extends State<prise_rdv> {
                             ),
                             if (mespromotions.isEmpty)
                               if (mespromotions.isEmpty)
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Column(
                                   children: [
-                                    Container(
-                                      // height: 40,
-                                      width:
-                                          MediaQuery.of(context).size.width / 2,
-                                      child: TextField(
-                                        controller: _ControlCoupon,
-                                        decoration: const InputDecoration(
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.blue)),
-                                          filled: true,
-                                          fillColor: Color.fromARGB(
-                                              255, 218, 232, 244),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.grey)),
-                                          label: Text(
-                                            "Code du coupon",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
+                                    TextField(
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(5)
+                                      ],
+                                      style: customStyle.titreStyle(
+                                          Colors.black, 20),
+                                      keyboardType: TextInputType.number,
+                                      controller: _ControlCoupon,
+                                      decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.blue)),
+                                        filled: true,
+                                        fillColor:
+                                            Color.fromARGB(255, 218, 232, 244),
+                                        border: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.grey)),
+                                        label: Text(
+                                          "Code du coupon",
+                                          style: customStyle.curenttext(
+                                              Colors.black, 20),
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      height: 40,
-                                      child: ElevatedButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                      Color>(Colors.red),
-                                              shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              )),
-                                          onPressed: () {
-                                            validerCoupons()
-                                                .then((value) => setState(() {
-                                                      somme = value;
-                                                    }));
-                                          },
-                                          child: NewText(
-                                              'Appliquer', 15, Colors.white)),
-                                    )
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        height: 40,
+                                        child: ElevatedButton(
+                                            style: customStyle
+                                                .primarybutton(Colors.blue),
+                                            onPressed: () {
+                                              validerCoupons()
+                                                  .then((value) => setState(() {
+                                                        somme = value;
+                                                      }));
+                                            },
+                                            child: NewText(
+                                                'Appliquer', 15, Colors.white)),
+                                      ),
+                                    ),
                                   ],
                                 ),
 
@@ -833,7 +826,7 @@ class _prise_rdvState extends State<prise_rdv> {
                   child: Text(
                     " Selectionnez l'heure ",
                     textAlign: TextAlign.start,
-                    style: textstyle.titreStyle(Colors.black, 20),
+                    style: textstyle.curenttext(Colors.black, 25),
                   ),
                 ),
                 actions: [
@@ -874,7 +867,7 @@ class _prise_rdvState extends State<prise_rdv> {
                           color: Colors.white,
                         ),
                         child: TableCalendar(
-                          calendarFormat: CalendarFormat.week,
+                          calendarFormat: CalendarFormat.twoWeeks,
                           locale: 'fr_FR',
                           rowHeight: 43,
                           focusedDay: today,
@@ -884,13 +877,13 @@ class _prise_rdvState extends State<prise_rdv> {
                           startingDayOfWeek: StartingDayOfWeek.monday,
                           headerStyle: HeaderStyle(
                               titleTextStyle:
-                                  GoogleFonts.andadaPro(fontSize: 20),
+                                  customStyle.titreStyle(Colors.black, 20),
                               formatButtonVisible: false,
                               titleCentered: true),
                           availableGestures: AvailableGestures.all,
                           daysOfWeekStyle: DaysOfWeekStyle(
-                            weekdayStyle: GoogleFonts.andadaPro(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                            weekdayStyle:
+                                customStyle.curenttext(Colors.black, 17),
                             weekendStyle: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -918,8 +911,8 @@ class _prise_rdvState extends State<prise_rdv> {
                         children: [
                           Align(
                               alignment: Alignment.bottomLeft,
-                              child: NewBold(
-                                  "Heure disponible", 20, Colors.black)),
+                              child:
+                                  Titre("Heure disponible", 20, Colors.black)),
                           SizedBox(
                             height: 10,
                           ),
@@ -978,6 +971,7 @@ class _prise_rdvState extends State<prise_rdv> {
                                         .isBefore(DateTime(today.year,
                                             today.month, today.day, i, j)))
                                   Card(
+                                    // surfaceTintColor: Colors.red,
                                     shadowColor: Colors.black,
                                     child: ListTile(
                                       selectedColor: Colors.blue,
@@ -1019,7 +1013,7 @@ class _prise_rdvState extends State<prise_rdv> {
                                     ),
                                   ),
 
-                          // Text("$TrueTimeDate")
+                          //  /   Text("$TrueTimeDate")
                         ],
                       ),
                     ],
