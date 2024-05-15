@@ -19,16 +19,13 @@ class cardNotReservation extends StatelessWidget {
             ),
           ],
           borderRadius: BorderRadius.circular(10)),
-
-            width: MediaQuery.of(context).size.width ,
-            height: 150,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Mytext("Aucune réservation pour aujourd'hui", 20, Colors.black)
-              ],
-            ),
+      width: MediaQuery.of(context).size.width,
+      height: 150,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [Mytext("Aucune réservation trouvée", 20, Colors.black)],
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gestion_salon_coiffure/Page/Admin_Page/reservationAdmin/retour.dart';
+import 'package:gestion_salon_coiffure/Screen/Admin_Page/reservationAdmin/retour.dart';
 import 'package:gestion_salon_coiffure/Widget/textRich.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 

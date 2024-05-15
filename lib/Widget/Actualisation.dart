@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gestion_salon_coiffure/Page/Admin_Page/screen/HomePageAdmin.dart';
+import 'package:gestion_salon_coiffure/Screen/Admin_Page/screen/HomePageAdmin.dart';
 
 class Actualisation extends StatelessWidget {
   const Actualisation({super.key});

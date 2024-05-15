@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gestion_salon_coiffure/Widget/sizeboxtype.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,13 @@ class cardRecherche extends StatelessWidget {
   final String description;
   final Callback onTap;
 
-  const cardRecherche({required this.carousel,required this.photos,required this.libelle,required this.prix,required this.description,required this.onTap});
+  const cardRecherche(
+      {required this.carousel,
+      required this.photos,
+      required this.libelle,
+      required this.prix,
+      required this.description,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -89,33 +96,26 @@ class cardRecherche extends StatelessWidget {
                     // color: Colors.blue,
                     // width: 200,
                     child: Text(
-                      "${libelle}",
-                      style: GoogleFonts.poppins(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    )),
+                  "${libelle}",
+                  style: GoogleFonts.poppins(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                )),
+                mysizeboxheight(5),
                 Container(
-                  child: Text(
-                    '${prix} FCFA',
-                    style: GoogleFonts.poppins(fontSize: 18),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      '${prix} FCFA',
+                      style: GoogleFonts.poppins(fontSize: 18),
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  "${description}",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.normal),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
+                mysizeboxheight(5),
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
@@ -126,8 +126,8 @@ class cardRecherche extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         )),
-                    onPressed:onTap,
-                    child: NewText("Voir plus",15,Colors.white))
+                    onPressed: onTap,
+                    child: NewText("Voir plus", 15, Colors.white))
               ],
             ),
           ),

@@ -544,7 +544,7 @@ Widget image() {
 
 message(BuildContext context, String libelle, Color couleur) {
   return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      duration: Duration(milliseconds: 900),
+      duration: Duration(milliseconds: 1500),
       backgroundColor: couleur,
       content: NewBold(libelle, 15, Colors.white)));
 }
@@ -799,10 +799,7 @@ Widget ListeTiles(String indice, IconData icon) {
 Widget Mytext(String montexte, double Size, Color couleur) {
   return Text(
     montexte,
-    style: GoogleFonts.poppins(
-      fontSize: Size,
-      color: couleur,
-    ),
+    style: TextStyle(fontSize: Size, color: couleur, fontFamily: 'popins'),
     textAlign: TextAlign.center,
   );
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gestion_salon_coiffure/Utils/utils.dart';
+import 'package:gestion_salon_coiffure/style/utils.dart';
 
 class CustomListTile extends StatelessWidget {
   final String title;

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gestion_salon_coiffure/Utils/utils.dart';
+import 'package:gestion_salon_coiffure/style/utils.dart';
 import 'package:gestion_salon_coiffure/fonction/fonction.dart';
 
 class cardStatut extends StatelessWidget {
